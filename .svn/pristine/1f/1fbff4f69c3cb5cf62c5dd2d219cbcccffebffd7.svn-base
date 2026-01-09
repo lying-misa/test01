@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span>增加科目</strong></div>
+  <div class="body-content">
+    <form method="post" class="form-x" id="save_examform" action="/admin/Subject/SaveSubject">
+      <div class="form-group">
+        <div class="label">
+          <label>科目名称：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Name}" name="Name" data-validate="required:请输入科目名称" />
+          <div class="tips"></div>
+        </div>
+      </div>
+		<div class="form-group">
+        <div class="label">
+          <label>状态：</label>
+        </div>
+        <div class="field">
+          <div class="button-group radio">
+			<label class="button active">
+
+				<input name="Status" value="1" <if condition="$data.Status eq 1">checked="checked"</if> type="radio"><span class="icon icon-check"></span> 正常
+
+			</label>
+			<label class="button">
+				<input name="Status" value="0" type="radio" <if condition="$data.Status eq 0">checked="checked"</if>><span class="icon icon-times"></span> 关闭
+
+			</label>
+		</div>
+        </div>
+      </div>
+		<!--<div class="form-group">
+        <div class="label">
+          <label>考试等级：</label>
+        </div>
+        <div class="field">
+			<div class="button-group border-main radio">
+				<volist name="Grade" id="vo">
+				<label class="button <if condition='$vo.checked eq 1'>active</if>">
+					<input name="level" value="1" <if condition='$vo.checked eq 1'>checked="checked"</if> type="radio">{$vo.grade}级
+				</label>
+				</volist>
+			</div>
+        </div>
+      </div>-->
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+         <input type="hidden" value="{$_GET['SubjectID']}" name="SubjectID">
+          <button class="button bg-main icon-check-square-o" type="button" id="J_SaveExam"> 提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+<link rel="stylesheet" href="__PUBLIC__/css/jquery.datetimepicker.min.css">
+<script src="__PUBLIC__/js/jquery.datetimepicker.full.min.js"></script>
+<script>
+//时间选择器
+$(".date_input").datetimepicker({
+	format: 'Y-m-d H:i',
+	step:10,
+});
+$.datetimepicker.setLocale('zh');
+
+$("#J_SaveExam").click(function(){
+	$("#save_examform").ajaxSubmit(function(){
+		var form=$("#save_examform");
+		var url=form.attr("action");
+		$.ajax({
+			type: 'POST', 
+			data: form.serialize(), 
+			url: url,
+			success: function(result){
+				alert(result.info);
+				if(result.status){
+					$(location).attr('href', '/admin/Subject');
+				}
+			},
+		});
+	});
+});
+
+
+
+</script>
+</html>

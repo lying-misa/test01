@@ -1,0 +1,37 @@
+/* CSS Document */
+.content{width: 1000px;margin: 20px auto;}
+.lbox{margin-right: 20px;padding: 20px;}
+.rbox{padding: 20px;}
+.clear{clear: both;}
+.info{line-height: 40px;}
+.info .infotit{font-weight: bold;}
+.info .infoval{}
+.info .infoval.time{font-size: 30px;color: #FF0004;font-weight: bold;text-align: center;line-height: 30px;    letter-spacing: 5px;}
+.que_table{margin-top: 20px;}
+.que_table .titnum{color: #333;width: 14.28%;height: 26px;text-align: center;line-height: 26px;float: left;border: 1px solid #00ABFF;cursor: pointer;}
+.que_table .titnum:hover{border:1px solid #000DFF;}
+.que_table .titnum.selected{background-color: #00abff;color: #fff;}
+
+.que_line{margin-top: 10px;padding: 10px;display: none;}
+.que_line.active{display: block;}
+.que_line .que_tit{line-height: 50px;font-size: 24px;font-weight: bold;}
+.que_line .que_val{font-size: 22px;margin-top: 10px;}
+.que_line .que_val ul li{line-height: 50px;height: 50px;}
+.que_line .que_val ul li input{margin-right:10px;height: 20px;width: 20px;}
+
+.button.border-main:hover{background-color: #0a8;}
+
+
+.bg{background: url("../images/loginbg.png") center center no-repeat;height: 100%;width: 100%;position: absolute;top: 0;left: 0;background-size: 100% 100%;z-index: -1;}
+.lpic-bg{position: absolute;background: url("../images/img2.png") center center no-repeat;width: 22px;height: 67px;background-size: 100% 100%;top: 0;left: -22px;}
+.rpic-bg{position: absolute;background: url("../images/img3.png") center center no-repeat;width: 22px;height: 67px;background-size: 100% 100%;top: 0;right: -22px;}
+
+
+
+
+
+
+
+
+
+

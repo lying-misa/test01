@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>在线刷题</title>
+	<link href="__PUBLIC__/mobile/css/mui.min.css" rel="stylesheet"/>
+	<link href="__PUBLIC__/mobile/css/iconfont.css" rel="stylesheet"/>
+	<link href="__PUBLIC__/mobile/css/common.css" rel="stylesheet"/>
+    <script src="__PUBLIC__/mobile/js/mui.min.js"></script>
+    
+
+</head>
+<body style="background-color: #fff;">
+	<div class="bg_category">
+		<div class="c_fix">
+		<div class="c_title">在线题库系统</div>
+		<div class="c_des color9">可根据自己的需求</br>选取合适的类别</div>
+		<div class="c_btn"> <button id="show_category" type="button" class="mui-btn mui-btn-blue" style="width: 100%; background: linear-gradient(to bottom right, #4981ed , #475ee9);border: none;padding: 0.2rem;">选择类别</button></div>
+		</div>
+	</div>
+	
+<!--	弹出层-->
+	<div id="popover_div"></div>
+	<div id="popover" class="mui-popover">
+		<div class="dialog  dialog_bg">
+			<div class="colorF dialog_group_line" style="padding-top: .6rem;">
+				<div style="font-size: 0.5rem;line-height: 0.5rem;">选择类别</div>
+				<div style="line-height: 0.4rem;height: 0.4rem; font-size: 0.2rem;">根据需求选取合适的类别</div>
+			</div>
+			<div class="bg-white">
+				<volist name="list" id="vo">
+					<div class="color3 dialog_group_line" style="margin-top: 1.2rem;">
+						<div class="min_tit" data-pid="1">{$vo.Name}</div>
+						<div class="tablist mui-table-view-radio">
+							<volist name="vo.Grades" id="grade">
+								<div class="tab" data-id="{$grade}">{$grade}级</div>
+							</volist>
+							<div class="mui-clearfix"></div>
+						</div>
+					</div>
+				</volist>
+			<div class="color3 dialog_group_line dialog_bottom" style="padding: 0;">
+				<input type="hidden" value="" id="qus_type">
+				<div class="J_random dialog_bl_btn color6">随便逛逛</div>
+				<div class="J_go_practice dialog_br_btn">进入练习</div>
+			</div>
+			</div>
+			<div class="mui-clearfix"></div>
+		</div>
+		
+	</div>
+	</div>
+	
+
+</body>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+		mui(".bg_category").on("tap",".mui-btn",function(){
+			mui("#popover").popover('toggle',document.getElementById("popover_div"));
+		});
+		mui(".tablist").on("tap",".tab",function(){
+			var pid=this.parentNode.previousElementSibling.dataset['pid'];
+			var id=this.dataset['id'];
+			document.getElementById("qus_type").value=pid+','+id;
+			var lastActiveElem = document.querySelector('.tablist .tab.active');
+			lastActiveElem&&lastActiveElem.classList.remove('active');
+			this.classList.add('active');
+		});
+		mui(".dialog_bottom").on("tap",".J_random",function(){
+			mui.openWindow({  
+				url: 'index.html',
+				id: 'index'
+			}) 
+		});
+		mui(".dialog_bottom").on("tap",".J_go_practice",function(){
+			var data_type=document.getElementById("qus_type").value.split(",");
+			mui.openWindow({  
+				url: '/Index/Practice/SubjectID/'+data_type[0]+'/GradeID/'+data_type[1]+'.html',
+				id: 'index'
+			}) 
+		});
+		
+    </script>
+</html>

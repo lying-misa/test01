@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>聚才人力集团在线刷题系统</title>
+<link href="__PUBLIC__/mobile/css/mui.min.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/iconfont.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/common.css" rel="stylesheet"/>
+<script src="__PUBLIC__/mobile/js/mui.min.js"></script>
+</head>
+<body style="background-color: #fff;padding: 0.5rem;position: relative;">
+<div class="logo_img"><img src="__PUBLIC__/mobile/images/logo-1.png"></div>
+<form class="mui-input-group" id="input_example" action="/OnlineExam/index.php/mobile/member/Reg" method="post">
+  <div class="mui-input-row"> <i class="iconfont icon-shouji color9"></i>
+    <input type="text" class="mui-input-clear" placeholder="请输入手机号码" name="Phone">
+  </div>
+  <div class="mui-input-row" style="margin-top: 0.3rem;"> <i class="iconfont icon-mima color9"></i>
+    <input type="password" class="mui-input-password" placeholder="请输入密码" name="Password">
+  </div>
+  <div class="mui-input-row" style="margin-top: 0.3rem;">
+	<i class="iconfont icon-yanzhengma2 color9"></i>
+    <input type="text" class="" placeholder="请输入验证码" style="width: 50%;float: left;" name="Code">
+	<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined" style="border:none;width: 35%;">发送验证码</button>
+  </div>
+  <div class="mui-button-row" style="margin-top: 0.5rem;">
+    <!--<button type="button" class="mui-btn mui-btn-primary mui-radius" style="width: 100%;border-radius: 0.5rem; background: linear-gradient(to top right, #36eae8 , #1ba2e8);border: none;padding: 0.2rem;">注册</button>-->
+	  	<input type="submit" value="Submit" style="color:black;border:1px solid blue">
+  </div>
+  
+  <div class="mui-button-row" style="margin-top: 0.2rem;"> <a href="/mobile/member/login.html" style="color: #1ba2e8">已有帐号，去登录？</a> </div>
+</form>
+<div class="bottom_txt color9">———聚才人力集团在线刷题系统———</div>
+</body>
+<script>
+mui.init();
+mui.plusReady(function(){
+mui("#input_example").on("tap",".mui-btn",function(){
+	var check = true;
+	mui("#input_example input").each(function() {
+	//若当前input为空，则alert提醒 
+	if(!this.value || this.value.trim() == "") {
+		var label = this.previousElementSibling;
+		mui.alert(label.innerText + "不允许为空");
+		check = false;
+		return false;
+	}
+	}); //校验通过，继续执行业务逻辑 
+	if(check){
+		mui.alert('验证通过!')
+	}
+});
+mui.openWindow({  
+    url: 'login.html',
+    id: 'login.html'
+}) 
+
+})
+ 	
+</script>
+</html>

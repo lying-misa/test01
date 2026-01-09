@@ -1,0 +1,426 @@
+<?php
+namespace Home\Controller;
+
+use Think\Controller;
+
+class IndexController extends Controller
+{
+    /**
+     * 考生开始考试
+     * author: lying
+     * Date: 2018/10/18
+     * param id int session array
+     * return string
+     */
+    public function Index()
+    {
+        if(isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID']!=NULL &&
+            isset($_SESSION['User']['Username']) && $_SESSION['User']['Username']!=NULL &&
+            isset($_SESSION['User']['ZKZH']) && $_SESSION['User']['ZKZH']!=NULL){
+            $ExamID = $_REQUEST['ExamID']?$_REQUEST['ExamID']:1;
+            $res = $this->HaveExam($ExamID);
+            if($res){
+                //判断时间是否开始考试
+                $time = time();
+                if($time >= $res['Start']  && $res['End'] >= $time){
+                    $where = array(
+                        "ExamID" => $ExamID,
+                        "ExamineeID" =>  $_SESSION['User']['UserID']
+                    );
+                    if (!$this->IsExamed($where)) {
+                        $this->show("本次考试已经考过试了，请联系工作人员！");
+                        //var_dump($_COOKIE);
+                        //exit();
+                    } else {
+                        $ExaminationPager = M('ExaminationPager');
+                        $where = array("ExamID" => $ExamID, "Status" => 1);
+                        $result = $ExaminationPager->where($where)->field('ID,ExamID,Questions')->find();
+                        if ($result) {
+                            $result['Questions'] = json_decode($result['Questions'], true);
+                            $result['Questions'] = $this->Obj2Arr($result['Questions']);
+                            $User = $_SESSION['User'];
+                            $Exam = M('Exam');
+                            $res = $Exam->where('id=' . $ExamID)->find();
+                            $User['TestName'] = $res['Name'];
+                            $User['Start'] = $res['Start'];
+                            $User['End'] = $res['End'];
+                            $this->assign("data", $result);
+                            $this->assign("User", $User);
+                            $this->display();
+                        } else {
+                            $this->error("本场考试未生成考题或禁止考试，请联系工作人员！");
+                        }
+                    }
+                }
+                elseif($res['Start'] > $time){
+                    $_SESSION['User']['UserID'] =NULL;
+                    $_SESSION['User']['Username'] =NULL;
+                    $_SESSION['User']['ZKZH'] =NULL;
+                    $this->error("考试时间未开始","Index/Login");
+                    // echo "考试时间未开始!";
+                    exit;
+                }elseif($res['End'] < $time){
+                    $_SESSION['User']['UserID'] =NULL;
+                    $_SESSION['User']['Username'] =NULL;
+                    $_SESSION['User']['ZKZH'] =NULL;
+                    $this->error("考试时间已结束","Index/Login");
+                    // echo "考试时间已结束!";
+                    // exit;
+                }else{
+                    $_SESSION['User']['UserID'] =NULL;
+                    $_SESSION['User']['Username'] =NULL;
+                    $_SESSION['User']['ZKZH'] =NULL;
+                    $this->error("考试未开始！","Index/Login");
+                    //  echo "考试未开始!";
+                    //   exit;
+                }
+            }
+        }else{
+            $this->error("请登录","/Index/Login");
+        }
+        // $this->show();
+        //$this->display();
+    }
+    /**
+     * 登录界面
+     * author: lying
+     * Date: 2018/10/18
+     * param session
+     * return json
+     */
+    function Login(){
+        if(isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID']!=NULL &&
+            isset($_SESSION['User']['Username']) && $_SESSION['User']['Username']!=NULL &&
+            isset($_SESSION['User']['ZKZH']) && $_SESSION['User']['ZKZH']!=NULL){
+            $this->error("您已经登录过，请勿重复登录", '/Home/Index/Index');
+        }
+        $this->display();
+    }
+    /**
+     * 是否登录
+     * author: lying
+     * Date: 2018/10/18
+     * param session
+     * return json
+     */
+    function IsLogin(){
+        if(isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID']!=NULL &&
+            isset($_SESSION['User']['Username']) && $_SESSION['User']['Username']!=NULL &&
+            isset($_SESSION['User']['ZKZH']) && $_SESSION['User']['ZKZH']!=NULL){
+            return true;
+        }
+        else {
+            $this->error("请登录","Login");
+        }
+    }
+    /**
+     * 判断是否考过试
+     * author: lying
+     * Date: 2018/10/18
+     * param id int
+     * return json
+     */
+    public function IsExamed($where)
+    {
+        $ExamRecord = M('ExamRecord');
+        if (!$where) return false;
+        else {
+            $res = $ExamRecord->where($where)->find();
+            if ($res['ID']) return false;
+            else return true;
+        }
+    }
+    /**
+     * 登录提交
+     * author: lying
+     * Date: 2018/10/18
+     * param id int
+     * return json
+     */
+    public function LoginForm(){
+        $time = time();
+        $Examinee=M("Examinee");
+        // $data['Identity'] = I('Identity','', 'trim');
+        $data['ZKZH'] = I('ZKZH','', 'trim');
+        $Password= I('Password','', 'trim');
+        $data['ExamID'] = I('ExamID','', 'trim')?I('ExamID','', 'trim'):1;
+
+        // if(!$data['Identity'])  {$this->error('参数丢失：身份证号为空！');}
+        if(!$data['ZKZH'])  {$this->error('参数丢失：准考证号为空！');}
+        if(! $Password)  {$this->error('参数丢失：密码为空！');}
+        $res = $this->HaveExaminee2($data);
+        if(!$res) $this->error('考生不存在！');
+        else{
+            if($res['Password']!=null && $res['Password']) {
+                if ($res['Password'] == $Password) {
+                    session('User.UserID', $res['ID']);
+                    session('User.Identity', $res['Identity']);
+                    session('User.Username', $res['Username']);
+                    session('User.ZKZH', $res['ZKZH']);
+                    $this->success("登录成功!","Index");
+                } else {
+                    $this->error("密码错误!","Login");
+                }
+            }
+            else{
+                $this->error("当前考试暂未生成验证码,请联系工作人员!","Login");
+            }
+        }
+    }
+    /**
+     * 检查考生是否存在
+     * author: lying
+     * Date: 2018/10/18
+     * param string ZKZH identity string
+     * return bool
+     */
+    function HaveExaminee($where)
+    {
+        $Examinee = M('Examinee');
+        if (!$where) return false;
+        else {
+            $res = $Examinee->where($where)->field('ID,ExamID,ZKZH,Username,Score,Password')->find();
+            if (!$res["ID"]) return false;
+            else return $res;
+        }
+    }
+    /**
+     * 检查考生是否存在--登录密码
+     * author: lying
+     * Date: 2018/10/24
+     * param string ZKZH identity string
+     * return bool
+     */
+    function HaveExaminee2($where)
+    {
+        $Examinee = M('Examinee');
+        if (!$where) return false;
+        else {
+            $res = $Examinee->where($where)->field('ID,ExamID,ZKZH,Username,Score,Password')->find();
+            if (!$res["ID"]) return false;
+            else {
+                if($res['Password'] == null){
+
+                    $Exam = M('Exam');
+                    $res1 = $Exam->where(array("ID"=>$res['ExamID'],"Status"=>1))->field('Identifier')->find();
+                    if($res1['Identifier'])
+                        $res['Identifier'] = $res1['Identifier'];
+                }
+                return $res;
+            }
+        }
+    }
+    /**
+     * 提交试卷，得出分数
+     * author: lying
+     * Date: 2018/10/18
+     * param string ZKZH identity string
+     * return bool
+     */
+    function MakeScore()
+    {
+        $returnStr['status'] = 0;
+        $data['ExamID'] = I('ExamID','', 'trim')?I('ExamID','', 'trim'):1;
+        if(!$this->HaveExam($data['ExamID'])) {
+            // $this->error('非法考试或者考试不存在!');
+            $returnStr['msg'] = '非法考试或者考试不存在！';
+        }
+        else {
+            $Reply= I('Reply','', 'trim');
+            /* $Reply = array(
+                 "1",
+                 "2",
+                 array("1","2"),
+                 array("1","2"),
+                 "2",
+                 "1",
+             );*/
+            $Reply = $this->Num2Char($Reply);
+            $ExaminationPager = M('ExaminationPager');
+            $where = array("ExamID" => $data['ExamID'], "Status" => 1);
+            $Result = $ExaminationPager->where($where)->field('ID,Answers')->find();
+            $Score = 0;
+            if (!$Result) {
+                // $this->error('考试出现错误，无法匹对系统答案，请联系工作人员！');
+                $returnStr['msg'] = '考试出现错误，无法匹对系统答案，请联系工作人员！';
+            }else {
+                $Answers = json_decode($Result['Answers'],true);
+                $Index = $this->getSY($data['ExamID']);
+                $AnswersNum = count($Answers);
+                //算分数 计算选择题分数
+                for ($i=0,$OptionsScore=0,$MultipleScore=0,$JudgeScore=0;$i<$AnswersNum; $i++) {
+
+                    if($i<$Index[0]){
+                        if ($Reply[$i] == $Answers[$i]['Answer']) {
+                            $OptionsScore = $OptionsScore + 1;
+                        }
+                    }
+                    elseif($i>=$Index[0] && $i<$Index[1]){
+                        //选项升序排列
+                        sort($Reply[$i]);
+                        //$arrs = explode(",", $Answers[$i]['Answer']);
+                        $strings = implode(",",$Reply[$i]);
+                        if($Answers[$i]['Answer'] == $strings)
+                            $MultipleScore = $MultipleScore + 1;
+                    }
+                    elseif($i>=$Index[1] && $i<$Index[2]){
+                        if ($Reply[$i] == $Answers[$i]['Answer']) {
+                            $JudgeScore = $JudgeScore + 1;
+                        }
+                    }
+                }
+                $Score = $OptionsScore + $MultipleScore + $JudgeScore;
+                $data['ExamID'] = $data['ExamID']?$data['ExamID']:1;
+                $data['ExamineeID'] = $_SESSION['User']['UserID'];
+                $data['Reply'] = json_encode($Reply);
+                $data['CreateDate'] = time();
+                if(isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID']!=NULL &&
+                    isset($_SESSION['User']['Username']) && $_SESSION['User']['Username']!=NULL &&
+                    isset($_SESSION['User']['ZKZH']) && $_SESSION['User']['ZKZH']!=NULL){
+                    $ExamRecord = M('ExamRecord');
+                    $scs = $this->HaveExaminee(array("ExamID"=>$data['ExamID'],"ID"=>$_SESSION['User']['UserID']));
+                    if($this->IsExamed($data) && $scs['Score'] == 0){
+                        $data['Score'] = $Score;
+                        $res = $ExamRecord->add($data);
+                        $Examinee = M('Examinee');
+                        $res1 = $Examinee->where('ID='.$_SESSION['User']['UserID'].' and ExamID='.$data['ExamID'])->save(array("Score"=>$Score));
+                        if($res && $res1){
+                            $returnStr['status'] = 1;
+                            $returnStr['Score'] = $Score;
+                            $returnStr['msg'] = '提交试卷成功！';
+                        }
+
+                    }else{
+                        $returnStr['Score'] = $scs['Score'];
+                        $returnStr['msg'] = '您已经提交过，请勿重复提交试卷！';
+                    }
+                }
+                else{
+                    $returnStr['msg'] = '非法考生,请登录！';
+                }
+            }
+        }
+        $_SESSION['User']['UserID'] =NULL;
+        $_SESSION['User']['Username'] =NULL;
+        $_SESSION['User']['ZKZH'] =NULL;
+        $this->assign("data",$returnStr);
+        $this->display();
+    }
+    /**
+     * 检查考试ID是否存在
+     * author: lying
+     * Date: 2018/10/18
+     * param id int
+     * return bool
+     */
+    public function HaveExam($ID){
+        $Exam = M('Exam');
+        if(!$ID) return false;
+        else{
+            $res = $Exam->where('id='.$ID)->find();
+            if(!$res) return false;
+            else return $res;
+        }
+    }
+    /**
+     * 对象转化为二维数组
+     * author: lying
+     * Date: 2018/10/19
+     * param object
+     * return array
+     */
+    public function Obj2Arr($object){
+        $count = count($object);
+        for($i=0;$i<$count;$i++){
+            $object[$i]['Options'] = json_decode($object[$i]['Options'],true);
+        }
+        return $object;
+    }
+    /**
+     * 计算分数方法--分别选择题分数，多选题分数，判断题分数
+     * author: lying
+     * Date: 2018/10/19
+     * param object
+     * return array
+     */
+    protected  function getScore(){
+        $OptionsNum = count($Answers->Options);
+        $MultipleNum = count($Answers->Multiple);
+        $JudgeNum = count($Answers->Judge);
+        //算分数 计算选择题分数
+        for ($i = 0, $OptionsScore = 0; $i < $OptionsNum; $i++) {
+            if ($Reply['Options'][$i] == $Answers->Options[$i]->Answer) {
+                $OptionsScore = $OptionsScore + 1;
+            }
+        }
+        //算分数 计算多选题分数
+        for ($i = 1, $MultipleScore = 0; $i < $MultipleNum; $i++) {
+            //选项升序排列
+            sort($Reply['Multiple'][$i]);
+            $arrs = explode(",", $Answers->Multiple[$i]->Answer);
+            $strings = implode(",",$Reply['Multiple'][$i]);
+            if($Answers->Multiple[$i]->Answer == $strings)
+                $MultipleScore = $MultipleScore + 1;
+        }
+
+        //算分数 计算判断题分数
+        for ($i = 0, $JudgeScore = 0; $i < $JudgeNum; $i++) {
+            if ($Reply['Judge'][$i] == $Answers->Judge[$i]->Answer) {
+                $JudgeScore = $JudgeScore + 1;
+            }
+        }
+        $Score = $MultipleScore+$OptionsScore+$JudgeScore;
+    }
+    /**
+     * 将数字型答案转化成字符答案 1=>A 2=>B 3=>C 4=>D
+     * author: lying
+     * Date: 2018/10/19
+     * param array
+     * return array
+     */
+    function Num2Char($arr){
+        foreach ($arr as $key => $value) {
+            if(is_array($value)){
+                $arr[$key] = $this->Num2Char($value);
+            }
+            else {
+                switch ($value) {
+                    case 1:
+                        $arr[$key] = 'A';
+                        break;
+                    case 2:
+                        $arr[$key] = 'B';
+                        break;
+                    case 3:
+                        $arr[$key] = 'C';
+                        break;
+                    case 4:
+                        $arr[$key] = 'D';
+                        break;
+                    default:
+                        $arr[$key] = '';
+                        break;
+                }
+            }
+        }
+        return $arr;
+    }
+    /**
+     * 根据题目类型生成所对应题目序号范围
+     * author: lying
+     * Date: 2018/10/19
+     * param array
+     * return array
+     */
+    function getSY($ExamID)
+    {
+        $Exam = M('Exam');
+        $arr = $Exam->where('ID=' . $ExamID)
+            ->field('ID,Option,Multiple,Judge')
+            ->find();
+        $ExamTXNum[] = $arr['Option'];
+        $ExamTXNum[] = $arr['Option']+$arr['Multiple'];
+        $ExamTXNum[] = $arr['Option']+$arr['Multiple']+$arr['Judge'];
+        return $ExamTXNum;
+    }
+}

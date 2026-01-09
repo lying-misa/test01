@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span>修改考题</strong></div>
+  <div class="body-content">
+    <form method="post" class="form-x" action="/admin/Questions/SaveQuestions" id="save_quesform">
+      <div class="form-group">
+        <div class="label">
+          <label>考题名称：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.title}" name="Title" data-validate="required:请输入考题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考题类型：</label>
+        </div>
+        <div class="field">
+          <select class="input w50" name="Type" data-validate="required:请选择分类" id="select1">
+            <option value="">请选择考题类型</option>
+			  <option value="1" <if condition="$data.type eq 1">selected="selected"</if>>单选题</option>
+            <option value="2" <if condition="$data.type eq 2">selected="selected"</if>>多选题</option>
+            <option value="3" <if condition="$data.type eq 3">selected="selected"</if>>判断题</option>
+          </select>
+          <div class="tips"></div>
+        </div>
+      </div>
+      <volist name="data['options']" id="options">
+      	<div class="form-group">
+			<div class="label">
+			  <label>选项{$options.key}：</label>
+			</div>
+			<div class="field">
+			  <input type="text" class="input w50" value="{$options}" name="Options[]" data-validate="required:请输入内容" />
+			  <div class="tips"></div>
+			</div>
+		  </div>
+      	
+      </volist>
+
+      
+      <div class="form-group">
+        <div class="label">
+          <label>答案：</label>
+        </div>
+        <div class="field">
+         <input type="text" class="input w50" value="{$data.answer}" name="answer" data-validate="required:请输入内容" />
+          <div class="tips"></div>
+        </div>
+        
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+         <div class="height-big bg-yellow w50 text-center">多个答案请用英文逗号隔开，判断题A为正确，B为错误</div>
+         <div class="tips"></div>
+        </div>
+        
+      </div>
+      
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+          <button class="button bg-main icon-check-square-o" type="button" id="J_saveQues"> 提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+<script>
+
+
+	$("#J_saveQues").click(function(){
+		$("#save_quesform").ajaxSubmit(function(){
+			var form=$("#save_quesform");
+			var url=form.attr("action");
+			$.ajax({
+				type: 'POST', 
+				data: form.serialize(), 
+				url: url,
+				success: function(result){
+					alert(result.info);
+					if(result.status){
+						$(location).attr('href', '/admin/Exam');
+					}
+				},
+			});
+		});
+	});
+</script>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+
+  <div class="panel admin-panel">
+    <div class="panel-head"><strong class="icon-reorder"> 刷题管理</strong></div>
+    <div class="padding border-bottom">
+      <ul class="search" style="padding-left:10px;">
+        <li> <a class="button border-main icon-plus-square-o" style="padding:5px 15px;" href="/admin/Subject/EditKnowledge/SubjectID/{$SubjectID}/GradeID/{$GradeID}">添加知识点</a> </li>
+        <li>
+          <input type="text" placeholder="请输入搜索关键字" name="Name" class="input" style="width:250px; line-height:17px;display:inline-block" />
+          <a href="javascript:void(0)" class="button border-main icon-search" style="padding:5px 15px;" id="changesearch" > 搜索</a></li>
+      </ul>
+    </div>
+    <form method="post" action="/admin/Subject/DelKnowledge" id="listform">
+    <table class="table table-hover text-center">
+      <tr>
+        <th width="100" style="text-align:left; padding-left:20px;">ID</th>
+        <th>知识点名称</th>
+        <th>知识点状态</th>
+        <th>创建时间</th>
+        <th width="320">操作</th>
+      </tr>
+		<volist name="list" id="list">
+       
+       
+        <tr>
+          <td style="text-align:left; padding-left:20px;"><input type="checkbox" name="ID[]" value="{$list.ID}" />{$list.ID}</td>
+          <td>{$list.Name}</td>
+			<td><if condition="$list.Status eq 1"><span class="text-green">发布阶段</span><else/><span class="text-yellow">测试阶段</span></if></td>
+          <td>{$list.CreateDate|date='Y-m-d',###}</td>
+          <td>
+          	<div class="button-group">
+          	    <a class="button button-little border-main" href="/admin/Subject/EditKnowleage/SubjectID/{$list.ID}"><span class="icon-edit"></span>修改</a>
+          	    <a class="button button-little border-blue import_qus" href="javascript:void(0)" data-id="{$list.ID}"><span class="icon-file-text-o"></span>导入考题</a>
+                <a class="button button-little border-yellow" href="/admin/Subject/Knowledgeqs/KnowledgeID/{$list.ID}"><span class="icon-file-text-o"></span>查看考题</a>
+                <a class="button button-little border-red delsingle" href="javascript:void(0)" data-id="{$list.ID}" ><span class="icon-trash-o"></span>删除</a>
+          	</div>
+          </td>
+        </tr>
+		</volist>
+
+      <tr>
+        <td style="text-align:left; padding:19px 0;padding-left:20px;"><input type="checkbox" id="checkall"/>
+          全选 </td>
+        <td colspan="10" style="text-align:left;padding-left:20px;">
+            <a href="javascript:void(0)" class="button border-red icon-trash-o" style="padding:5px 15px;" id="DelSelect" > 删除</a>
+
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="10"><div class="pagelist">{$page}</div></td>
+      </tr>
+    </table>
+    </form>
+  </div>
+  <form id="importbox" name="FormData" action="/admin/Subject/UploadExcel"  enctype="multipart/form-data" method="post">
+      <div class="hidebox" id="hidebox">
+          <div class="dialog open dialog_hidebox">
+              <div class="dialog-head">
+                  <span class="dialog-close close" id="hide_close"></span><strong>导入考题</strong>
+              </div>
+              <div class="dialog-body">
+                  <div class="importline"><input type="file" name="excelData" ></div>
+                  <div class="importline">
+                      <select class="input w50" name="Type" data-validate="required:请选择分类">
+                          <option value="">请选择导入题型</option>
+                          <option value="1">单选题</option>
+                          <option value="2">多选题</option>
+                          <option value="3">判断题</option>
+                          <option value="4">简单题</option>
+                      </select>
+                  </div>
+                  <div class="importline">
+                      <input type="hidden" name="GradeID" value="{$GradeID}"/>
+                      <input type="hidden" name="SubjectID" value="{$SubjectID}"/>
+                      <input type="hidden" name="KnowledgeID" value=""/>
+                      <input type="submit" value="导入" class="button border-blue">
+                  </div>
+
+              </div>
+
+          </div>
+      </div>
+  </form>
+</body>
+<script src="__PUBLIC__/js/admin_common.js"></script>
+<script>
+$(".import_qus").on("click",function(){
+		var ID = $(this).data("id");
+		$("input[name='KnowledgeID']").val(ID);
+		$("#hidebox").show();
+	});
+	$("#hide_close").click(function(){
+		$("#hidebox").hide();
+	});
+</script>
+</html>

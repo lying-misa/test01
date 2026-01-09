@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>聚才人力集团在线刷题系统</title>
+<link href="__PUBLIC__/mobile/css/mui.min.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/iconfont.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/common.css" rel="stylesheet"/>
+<script src="__PUBLIC__/mobile/js/mui.min.js"></script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav bg-theme ">
+	<button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left" style="color: #fff;"><span class="mui-icon mui-icon-left-nav"></span></button>
+  <h1 class="mui-title colorF">我的收藏</h1>
+</header>
+<div class="mui-content mui-scroll-wrapper ">
+  <div class="mui-scroll">
+    <ul class="mui-table-view">
+		<volist name="data" id="vo">
+			 <li class="mui-table-view-cell mui-media">
+        <div class="mui-slider-right mui-disabled">  <a href="javascript:;" data-id="{$vo.ID}" class="mui-btn mui-btn-red J_cannel_collect" ><i class=" mui-icon mui-icon-trash"></i>移除</a> </div>
+        <div class="mui-slider-handle"> <a href="/mobile/practice/analysis/action/RandPractice/ID/{$vo.ID}">
+			
+			<div class="mui-media-object mui-pull-left theme_bg" style="width: 42px;text-align: center;color: #fff;font-size: 0.5rem;background-color: #4768f3;border-radius: 50%;">
+				<if condition="$vo.Type eq 1">单<elseif condition="$vo.Type eq 2"/>多<elseif condition="$vo.Type eq 3"/>判<else/>简</if>
+			</div>
+			
+          <div class="mui-media-body"> {$vo.Title}
+          </div>
+          </a> </div>
+      </li>
+		</volist>
+     
+
+    </ul>
+  </div>
+</div>
+</body>
+<script>
+	mui.init();
+	mui("body").on('tap','.J_cannel_collect',function(){
+		var id=this.dataset['id'];
+		if(!id){mui.toast('缺少ID，操作失败！',{ duration:'long', type:'div' });return false;}
+		mui.ajax('/mobile/member/cancelCollect',{
+			data:{
+				ID:id
+			},
+			dataType:'json',//服务器返回json格式数据
+			type:'post',//HTTP请求类型
+			timeout:10000,//超时时间设置为10秒；	              
+			success:function(data){
+				mui.toast(data.errormsg,{ duration:'long', type:'div' });
+				location.reload();
+				
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+			}
+		});
+	});
+	mui('body').on('tap','a',function(){
+		window.top.location.href=this.href;
+	});
+	</script>
+</html>

@@ -1,0 +1,71 @@
+<?php
+namespace Admin\Controller;
+
+use Think\Controller;
+
+class CorrectionController extends Controller
+{
+
+    function index()
+    {
+       $this->lists();
+    }
+    function lists(){
+        $Correction = M('Correction');
+        $knowledge_qs = M('knowledge_qs');
+        $res = $Correction->where()->select();
+        $count = count($res);
+        for($i=0;$i<$count;$i++){
+            $questions = $knowledge_qs->where('ID='.$res[$i]['QID'])->field('ID,Title,Options,Answer,Type')->find();
+           // $questions_s = json_decode($questions['Options']);
+           // $count_qs = count($questions_s);
+          // for($i= 0;$i<$count_qs;$i++){
+            //    $questions['option'][$i]['val'] =$questions_s[$i];
+          //  }
+            $res[$i]['True'] = $questions['Answer'];
+            $res[$i]['Title'] = $questions['Title'];
+        };
+        $this->assign('list',$res);
+        $this->display();
+    }
+    /*
+     * 设置为正确答案
+     *
+     * */
+    function Save(){
+        $QID = I('post.QID')?I('post.QID'):0;
+        $data['ID']= I('post.ID')?I('post.ID'):0;
+        $info['Status'] = 1;
+        $info['Answer'] = I('post.Answer')?I('post.Answer'):0;
+        $info['Reason'] = I('post.Reason')?I('post.Reason'):0;
+        $data['UserID'] = $_SESSION['User']['UserID'];
+        if(!$data['ID']) $this->error("ID为空！");
+        if(!$QID) $this->error("QID为空！");
+        if(!$info['Answer']) $this->error("Answer为空！");
+        if(!$info['Reason']) $this->error("Reason为空！");
+        $Correction= M('Correction');
+        $KnowledgeQs = M('KnowledgeQs');
+        $res = $Correction->where($data)->save($info);
+        $res2 = $KnowledgeQs->where('ID='.$QID)->save(array("Answer"=>$info['Answer'],'Analysis'=>$info['Reason']));
+        if($res && $res2){
+            $this->success('添加成功！');
+        }else{
+            $this->error('添加失败！'); 
+        }
+    }
+
+    function del(){
+        $Correction= M('Correction');
+        $data['ID'] = I('ID','', 'trim');
+        if(!$data['ID']){
+            $this->error('ID为空！');
+        }
+        $res = $Correction->where($data)->delete();
+        if($res){
+            $this->success('删除成功！');
+        }else{
+            $this->error('删除失败！');
+        }
+    }
+
+}

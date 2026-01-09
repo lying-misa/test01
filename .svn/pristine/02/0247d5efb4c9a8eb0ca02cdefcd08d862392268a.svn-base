@@ -1,0 +1,110 @@
+<?php
+namespace Mobile\Controller;
+
+use Think\Controller;
+
+class MemberController extends Controller
+{
+    public function login()
+    {
+        $practice_user = M('practice_user');
+        $returnStr['status'] = 0;
+        $data['Phone'] = I('Phone','', 'trim');
+        $data['Password'] = I('Password','', 'trim');
+        if(!$data['Phone'])  {$returnStr['errormsg'] = '参数丢失：手机号为空';$this->ajaxReturn($returnStr);}
+        if(!$data['Password'])  {$returnStr['errormsg'] = '参数丢失：密码为空';$this->ajaxReturn($returnStr);}
+            if(!$this->IsHaveUser('phone='.$data['phone'])){
+                $returnStr['errormsg'] = '手机号不存在';$this->ajaxReturn($returnStr);
+            }else{
+                $data['Password'] = base64_encode($data['Password']);
+                $res = $practice_user->where($data)->find();
+                if(!$res) {$returnStr['status'] = 0;$returnStr['errormsg'] = '手机号或者用户名错误';}
+                else{
+                    $returnStr['status'] = 1;
+                    $returnStr['errormsg'] = '登录成功！';
+                    $_SESSION['User']['UserID'] = $res['ID'];
+                    $_SESSION['User']['Phone'] = $res['Phone'];
+                }
+            }
+        $this->display();
+    }
+    public function Reg()
+    {
+        $time = time();
+        $practice_user = M('practice_user');
+        $returnStr['status'] = 0;
+        $data['Phone'] = I('Phone','', 'trim');
+        $data['Password'] = I('Password','', 'trim');
+        $data['Code'] = I('Code','', 'trim');
+        if(!$data['Phone'])  {$returnStr['errormsg'] = '参数丢失：手机号为空';$this->ajaxReturn($returnStr);}
+        if(!$data['Password'])  {$returnStr['errormsg'] = '参数丢失：密码为空';$this->ajaxReturn($returnStr);}
+        if(!$data['Code'])  {$returnStr['errormsg'] = '参数丢失：验证码为空';$this->ajaxReturn($returnStr);}
+        if($data['Code'] != $_SESSION['Code'] && $_SESSION['Code']!='' && $_SESSION['Code']!=null){
+            $returnStr['errormsg'] = '参数丢失：验证码错误';$this->ajaxReturn($returnStr);
+        }else{
+            if(!$this->IsHaveUser('phone='.$data['phone'])){
+                $data['CreateDate'] = $time;
+                $data['Status'] = 1;
+                $data['Password'] = base64_encode($data['Password']);
+                $res = $practice_user->add($data);
+                if($res) {$returnStr['status'] = 1;$returnStr['errormsg'] = '添加成功！';}
+                else{
+                    $returnStr['errormsg'] = '添加失败！';
+                }
+
+            }else{
+                $returnStr['errormsg'] = '手机号已存在';$this->ajaxReturn($returnStr);
+            }
+        }
+        $this->display();
+    }
+    public function IsHaveUser($where){
+        $practice_user = M('practice_user');
+        $res = $practice_user->where($where)->find();
+        if($res['ID']) return $res;
+        else return false;
+    }
+
+    public function SendCode(){
+        $returnStr['Status'] = 0;
+        $tel = I('Phone','', 'trim');
+        if(!$tel)  {$returnStr['errormsg'] = '参数丢失：手机号为空';$this->ajaxReturn($returnStr);}
+        if(!$this->IsHaveUser('phone='.$tel)){
+            $_SESSION['Code'] = $this->alisms($tel, "reg");
+            if($_SESSION['Code']){
+                $returnStr['Status'] = 1;
+                $returnStr['errormsg'] = '发送成功';
+            }else
+                $returnStr['errormsg'] = '发送失败';
+        }else {
+            $returnStr['errormsg'] = '手机号已存在';$this->ajaxReturn($returnStr);
+        }
+        $this->ajaxReturn($returnStr);
+    }
+    function alisms($tel,$category)
+    {
+        header("Content-Type:text/html;charset=gb2312");
+        $randkey = rand(1000, 9999);
+        if ($category=="login"){
+            $sinname= '注册验证';
+            $product= '聚才人力刷题系统注册';
+        }elseif ($category=="getpass"){
+            $sinname= '身份验证'; //
+            $product= '人事考试网上报名系统密码找回';
+        }
+        $sinname= iconv('GB2312', 'UTF-8', $sinname);
+        $sinnames= $sinname;
+        $products = '验证码：'.$randkey.'，您正在进行'.$product.'。请在页面输入完成验证，如非本人操作请忽略。+【人才网ncrczpw.com】';
+        $products= iconv('GB2312', 'UTF-8', $products);
+        //	$strParam = 'mto='.$mto.'&mcon='.$products.'&cls=ks';
+        $strParam = 'action=send&userid=3054&account=zjjctk&password=LXTitp123&mobile='.$tel.'&content='.$products.'&sendTime=&extno=';
+        //$url = 'http://172.16.9.2/sendsms_TLC_utf.asp?'.$strParam;
+        $url = 'http://120.76.213.253:8888/sms.aspx?'.$strParam;
+        $result = file_get_contents($url);
+
+        return $randkey;
+    }
+    function MyCollect(){
+
+    }
+}

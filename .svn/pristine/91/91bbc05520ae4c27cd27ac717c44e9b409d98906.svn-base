@@ -1,0 +1,158 @@
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<link rel="stylesheet" href="/Public/css/pintuer.css">
+<link rel="stylesheet" href="/Public/css/home.css">
+<script src="/Public/js/jquery.js"></script>
+<script src="/Public/js/pintuer.js"></script>
+<script src="/Public/js/jquery.cookie.js"></script>
+</head>
+
+<body>
+<div class="content">
+  <div class="line">
+    <div class="x3">
+      <div class="lbox border border-sub">
+        <div class="info">
+          <div class="infotit x5">姓名：</div>
+          <div class="infoval x7">张三</div>
+        </div>
+        <div class="info">
+          <div class="infotit ">准考证号：</div>
+          <div class="infoval ">46546546546546546</div>
+        </div>
+        <div class="info">
+          <div class="infotit x5">报考课程：</div>
+          <div class="infoval x7">语文</div>
+        </div>
+         <div class="info">
+          <div class="infotit x5">考试时间：</div>
+          <div class="infoval x7">10：00-12：00</div>
+        </div>
+        <div class="info">
+          <div class="infotit">剩余时间：</div>
+          <div class="infoval time">2:00:00</div>
+        </div>
+        
+        <div class="que_table">
+        	<?php if(is_array($data["Questions"])): $i = 0; $__LIST__ = $data["Questions"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$titlist): $mod = ($i % 2 );++$i;?><div class="titnum"><?php echo ($key+1); ?></div><?php endforeach; endif; else: echo "" ;endif; ?>
+			<div style="clear: both;"></div>
+        </div>
+        
+      </div>
+    </div>
+    <div class="x9">
+      <div class="rbox border border-sub">
+      	<form method="post" action="">
+       <?php if(is_array($data["Questions"])): $fkey = 0; $__LIST__ = $data["Questions"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$queslist): $mod = ($fkey % 2 );++$fkey;?><div class="que_line">
+			  <div class="que_tit">(<?php echo ($key+1); ?>)&nbsp;<?php echo ($queslist["Title"]); ?></div>
+			  <div class="que_val">
+				<ul class="list-unstyle height">
+			  		<?php if(is_array($queslist["Options"])): $i = 0; $__LIST__ = $queslist["Options"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$answer): $mod = ($i % 2 );++$i; if($queslist["Type"] == 1): ?><li><input type="radio" name="t<?php echo ($fkey); ?>" value="<?php echo ($key+1); ?>"><?php echo ($answer); ?></li>
+			  			<?php elseif($queslist["Type"] == 2): ?>
+			  				<li><input type="checkbox" name="t<?php echo ($fkey); ?>[]" value="<?php echo ($key+1); ?>"><?php echo ($answer); ?></li>
+			  			<?php else: ?>
+			  				<li><input type="radio" name="t<?php echo ($fkey); ?>" value="<?php echo ($key+1); ?>"><?php echo ($answer); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+				</ul>
+			  </div>
+			</div><?php endforeach; endif; else: echo "" ;endif; ?>
+       <div class="x12">
+       		<input class="button border-sub button-large x3 prev" type="button" value="上一题">
+       		<div class="x6"></div>
+       		<input class="button border-sub button-large x3 next" type="button" value="下一题">
+       </div>
+       
+       <div class="clear"></div>
+       </form>
+      </div>
+      
+      
+    </div>
+  </div>
+</div>
+</body>
+<script>
+	var expire= new Date();
+	var expiresDate= new Date();
+	expiresDate.setTime(expire.getTime()+(300* 60*1000));
+	//?替换成分钟数如果为60分钟则为 60 * 60 *1000
+	var cookie=JSON.parse($.cookie('__cookie__'));//读取cookie
+	var num=$(".titnum").length;
+	if(!cookie){
+		save_cookie(0,"");
+		$(".que_line").eq(0).addClass("active");
+	}else{
+		$(".que_line").eq(cookie.num).addClass("active");
+		
+		var hfselect=cookie.answer;
+		for(var i=0;i<num;i++){
+			if(hfselect[i]){
+				var ansArr=hfselect[i].split(',');
+				var anslength=$(".que_line").eq(i).find('li').length;
+				for(var j=0;j<anslength;j++){
+					if(ansArr[j]){
+						$(".que_line").eq(i).find('input').eq(ansArr[j]-1).prop('checked', true);
+						
+					}
+					
+				}
+			}
+		}
+	}
+	var Ansdata=new Object();
+	//保存cookie
+	function save_cookie(num,answer){
+		var cookieArr=new Object();
+		cookieArr['num']=num;
+		cookieArr['answer']=answer;
+		$.cookie("__cookie__",JSON.stringify(cookieArr), {
+  			path : '*',//cookie的作用域
+  			expires : expiresDate
+ 		});
+	}
+
+	
+	$(".prev").click(function(){
+		var indexnum=$(".que_line").index($(".active"));
+		if(indexnum>0){
+			$(".que_line").eq(indexnum).removeClass("active");
+			$(".que_line").eq(indexnum-1).addClass("active");
+			var cookie=JSON.parse($.cookie('__cookie__')); 
+			var answer=getanswer(indexnum);
+			save_cookie(indexnum-1,answer);
+		}else{
+			alert("已经是第一题了！");
+		}
+		
+	});
+	$(".next").click(function(){
+		var indexnum=$(".que_line").index($(".active"));
+		if(indexnum<(num-1)){
+			$(".que_line").eq(indexnum).removeClass("active");
+			$(".que_line").eq(indexnum+1).addClass("active");
+			var cookie=JSON.parse($.cookie('__cookie__'));
+			var answer=getanswer(indexnum);
+			save_cookie(indexnum+1,answer);
+		}else{
+			alert("已经是最后一题了！");
+		}
+		
+		//console.log(JSON.parse($.cookie('__cookie__')));
+	});
+	
+	function getanswer(n){
+		var form=$(".que_line").eq(n).find("input:checked");
+		var m=[];
+		var i=0;
+		form.each(function () {
+			m[i]=this.value;
+			i++;
+            Ansdata[n]=m.join(",");
+        })
+		
+		return Ansdata;
+	}
+</script>
+</html>

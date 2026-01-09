@@ -1,0 +1,337 @@
+<?php
+namespace Admin\Controller;
+
+use Think\Controller;
+
+class OldExamController extends Controller
+{
+    //真题题型个数
+    public $arr = array(2,2,2,2,1,1);
+    public $zm = array("A","B","C","D","E","F","G","H","I");
+    /**
+     * 真题列表
+     * author: lying
+     * Date: 2018/10/18
+     * param where
+     * return array
+     */
+    function index()
+    {
+        $map = array();
+        $Name = I('Name','', 'trim');
+        if($Name!=NULL && $Name!=""){
+            $map['Name'] = array('like','%'.$Name.'%');
+        }
+        $p = $_GET['p']?$_GET['p']:1;
+        $Exam = M('OldExam');
+        $list = $Exam->where($map)
+            ->page($_GET['p'].',15')
+            ->field('ID,Name,Start,End,Status,CreateDate')
+            ->select();
+        //$this->assign('list',$list);
+        $count      = $Exam->where($map)->count();
+        $Page       = new \Think\Page($count,15);
+        foreach($map as $key=>$val) {
+            $Page->parameter[$key]   =   urlencode($val);
+        }
+        $show  = $Page->show();
+        $this->assign('list',$list);// 赋值数据集
+        $this->assign('page',$show);// 赋值分页输出
+        $this->assign('map',$map);// 赋值分页输出
+        $this->display(); // 输出模板
+    }
+    /**
+     * 保存考试
+     * author: lying
+     * Date: 2018/10/15
+     * param data array
+     * return json
+     */
+    public function SaveExam(){
+        $time = time();
+        $Exam=M("OldExam");
+        $ID = I('ExamID','', 'trim');
+        $returnStr['status'] = 0;
+        $data['Name'] = I('Name','', 'trim');
+        $data['Description'] = I('Description','', 'trim');
+        $data['Status'] = I('Status','', 'trim')?I('Status','', 'trim'):0;
+        $data['SubjectID'] = I('SubjectID','', 'trim')?I('SubjectID','', 'trim'):0;
+        $data['GradeID'] = I('GradeID','', 'trim')?I('GradeID','', 'trim'):0;
+        $data['CreateDate'] = $time;
+        if(!$data['Name'])  {$returnStr['errormsg'] = '参数丢失：标题为空';$this->error($returnStr['errormsg']);}
+        if(!$data['SubjectID'])  {$returnStr['errormsg'] = '参数丢失：SubjectID为空！';$this->error($returnStr['errormsg']);}
+        if(!$data['GradeID'])  {$returnStr['errormsg'] = '参数丢失：GradeID为空！';$this->error($returnStr['errormsg']);}
+        if(!$data['Description'])  {$returnStr['errormsg'] = '参数丢失：考试描述为空！';$this->error($returnStr['errormsg']);}
+        if($ID!=null && $ID >0){
+            if ($this->HaveExam($ID)) {
+                $result = $Exam->where(array('ID' => $ID))->save($data);
+                if (false !== $result || 0 !== $result) {
+                    //$returnStr['status'] = 1;
+                    $returnStr['errormsg'] = '修改成功';
+                    $this->success($returnStr['errormsg']);
+                } else {
+                    $returnStr['errormsg'] = '修改失败!';
+                    $this->error($returnStr['errormsg']);
+                }
+            }else{
+                $returnStr['errormsg'] = '非法真题或者真题不存在!';
+                //  $this->ajaxReturn($returnStr);
+                $this->error($returnStr['errormsg']);
+            }
+
+        }
+        else{
+            $result = $Exam->add($data);
+
+            if ($result){
+                $returnStr['status'] = 1;
+                $returnStr['errormsg'] = '提交成功';
+                //$this->ajaxReturn($returnStr);
+                $this->success($returnStr['errormsg']);
+            }else{
+                $returnStr['errormsg'] = '提交失败!';
+                // $this->ajaxReturn($returnStr);
+                $this->error($returnStr['errormsg']);
+            }
+        }
+    }
+    /**
+     * 检查考试ID是否存在
+     * author: lying
+     * Date: 2018/10/15
+     * param id int
+     * return bool
+     */
+    public function HaveExam($ID){
+        $Exam = M('OldExam');
+        if(!$ID) return false;
+        else{
+            $res = $Exam->where('ID='.$ID)->find();
+            if(!$res['ID']) return false;
+            else return $res;
+        }
+    }
+
+    /**
+     * 删除考试
+     * author: lying
+     * Date: 2018/10/15
+     * param id int
+     * return json
+     */
+    public function DelExam(){
+        $returnStr['Status'] = 0;
+        //$ID = I('ExamID','', 'trim');
+        $ID = implode(",",I('ID','','trim'));
+        $Exam = M('OldExam');
+        if(!$ID) {
+            //$this->error('非法考试或者考试不存在!');
+            $returnStr['errormsg'] = '非法真题或者真题不存在!';
+            $this->ajaxReturn($returnStr);
+        }
+        else{
+            //if(!$this->HaveExam($ID)) {
+            //  $this->error('非法考试或者考试不存在!');
+            // }else {
+            $res = $Exam->where('id in ('.$ID.')')->delete();
+            if ($res) {
+                //$this->success('删除成功!');
+                $returnStr['Status'] = 1;
+                $returnStr['errormsg'] = '删除成功!';
+                $this->ajaxReturn($returnStr);
+            }
+            else {
+                //$this->error('删除失败!');
+                $returnStr['errormsg'] = '删除失败!';
+                $this->ajaxReturn($returnStr);
+            }
+            //}
+        }
+    }
+
+    /**
+     * 修改考试
+     * author: lying
+     * Date: 2018/10/15
+     * param id int
+     * return json
+     */
+    function EditExam()
+    {
+        $ID = I('ExamID','', 'trim');
+        if(!$this->HaveExam($ID)) {
+            $this->assign("title","添加真题");
+            $this->display();
+        }
+        else {
+            $Exam = M('OldExam');
+            $res = $Exam->where('id='.$ID)->find();
+            //科目
+            $where = array("status"=>1);
+            $Subject = M('Subject');
+            $kemu = $Subject->field('ID,Name,Grade')->where($where)->select();
+            $count = count($kemu);
+            if($count){
+                for($i=0;$i<$count;$i++){
+                    $kemu[$i]['grade'] = explode(',',$kemu[$i]['Grade']);
+                }
+            }else{
+                $kemu = null;
+            }
+            $this->assign('data',$res);
+            $this->assign('kemu',$kemu);
+            $this->assign("title","修改真题");
+            $this->display();
+        }
+    }
+    function IsLogined(){
+        if(isset($_SESSION['Name']) && $_SESSION['Name']!=NULL &&
+            isset($_SESSION['UserID']) && $_SESSION['UserID']!=NULL){
+            return true;
+        }else {
+            $this->error("请登录","Admin/Index/Login");
+        }
+    }
+
+    function ShowExam(){
+        $ExamID = I('get.ExamID');
+        if(!$ExamID) $this->error('ExamID为空');
+        $ExaminationPager = M('OldExaminationPager');
+        $res2 = $ExaminationPager->where('ExamID='.$ExamID)->order('CreateDate desc')->find();
+        $Questions = json_decode($res2['Questions'],true);
+        $ress = count($Questions);
+        $xs = array();
+        for($j=0;$j<$ress;$j++) {
+            $sds = count($Questions[$j]);
+            if($sds>0) {
+                for ($i = 0; $i < $sds; $i++) {
+                    $xs['Questions'][$j][$i]['Title'] = $Questions[$j][$i]['Title'];
+                    $xs['Questions'][$j][$i]['Type'] = $Questions[$j][$i]['Type'];
+                    $xs['Questions'][$j][$i]['TW'] = $Questions[$j][$i]['TW'];
+                    $xs['Questions'][$j][$i]['TWPic'] = $Questions[$j][$i]['TWPic'];
+                    $xs['Questions'][$j][$i]['Options'] = json_decode($Questions[$j][$i]['Options'], true);
+                    // $xs['Questions'][$i]['Answer'] = $Reply[$i];
+                }
+            }
+        }
+        $xs['Name'] = $res2['Title'];
+        $xs['Year'] = $res2['Year'];
+        $this->assign('res',$xs);
+        $this->assign('zm',$this->zm);
+        $this->display();
+    }
+
+    /**
+     * 生成试卷
+     * author: lying
+     * Date: 2018/10/17
+     * param id int
+     * return array
+     */
+    function MakePages(){
+        $ExamID = I('get.ExamID');
+        if(!$ExamID) return false;
+        $where['OldExamID'] = $ExamID;
+       //选择题
+        $field_questions = 'ID,Title,Options,Type';
+         $field_answers = 'ID,Answer,Type';
+        $where['type'] = 1;
+        $Questions[0] = $this->RandQuestion($where, $field_questions, $this->arr[0]);
+        $Answers[0] = $this->RandQuestion($where, $field_answers, $this->arr[0]);
+        //多选题
+        $where['type'] = 2;
+        $Questions[1] = $this->RandQuestion($where, $field_questions, $this->arr[1]);
+        $Answers[1] = $this->RandQuestion($where, $field_answers, $this->arr[1]);
+        //判断题
+        $where['type'] = 3;
+        $Questions[2] = $this->RandQuestion($where, $field_questions, $this->arr[2]);
+        $Answers[2] = $this->RandQuestion($where, $field_answers, $this->arr[2]);
+        //简答题
+        $where['type'] = 4;
+        $Questions[3] = $this->RandQuestion($where, $field_questions, $this->arr[3]);
+        $Answers[3] = $this->RandQuestion($where, $field_answers, $this->arr[3]);
+        //理论分析
+        $where['type'] = 5;
+        $Questions[4] = $this->RandQuestion($where, $field_questions, $this->arr[4]);
+        $Answers[4] = $this->RandQuestion($where, $field_answers, $this->arr[4]);
+        //论文
+        $where['type'] = 6;
+        $Questions[5] = $this->RandQuestion($where, $field_questions, $this->arr[5]);
+        $Answers[5] = $this->RandQuestion($where, $field_answers, $this->arr[5]);
+        //汇总
+       // $QuestionArr = $this->HuiZong($Questions);
+        //$AnswersArr = $this->HuiZong($Answers);
+        //生成试卷
+        $pager['ExamID'] = $ExamID;
+        $pager['Questions'] = json_encode($Questions);
+        $pager['Answers'] = json_encode($Answers);
+        $pager['Status'] = 1;
+        $pager['CreateDate'] = time();
+        $OldExam = M('OldExam');
+        $sxs=$OldExam->field('Name,Org')->where('ID='.$ExamID)->find();
+        $pager['Title'] = $sxs['Name'];
+        $pager['Year'] = $sxs['Org'];
+        $this->MakeExam($pager);
+    }
+    /**
+     * 生成试卷考试
+     * author: lying
+     * Date: 2018/10/17
+     * param data array
+     * return bool
+     */
+    public function MakeExam($data){
+        var_dump($data);
+        $ExaminationPager = M('OldExaminationPager');
+        $result = $ExaminationPager->add($data);
+        echo $ExaminationPager->getLastSql();
+        exit();
+        if ($result) {
+            $this->success('生成成功！');
+        } else {
+            $this->error("生成失败！");
+        }
+    }
+    /**
+     * 随机取出题目
+     * author: lying
+     * Date: 2018/10/17
+     * param where array
+     * return data array
+     */
+    function RandQuestion($where,$field,$num){
+        $where['mode'] = 0;
+        $where['status'] = 1;
+        $Questions = M('OldQuestions');
+        $arr = $Questions->where($where)
+            ->field($field)
+            ->limit($num)
+            ->select();
+        return $arr;
+    }
+
+    /**
+     * 三维数组转化为二维数组
+     * author: lying
+     * Date: 2018/10/18
+     * param id int
+     * return json
+     */
+    function HuiZong($arr){
+        //汇总
+       // $count1 = count( $arr['Options'] );
+       // $count2 = count( $arr['Multiple'] );
+       // $count3 = count( $arr['Judge'] );
+       // for($i=0;$i<$count1;$i++){
+       //     $array[$i] = $arr['Options'][$i];
+       // }
+       // for($k=$count1,$i=0;$i<$count2;$i++,$k++){
+       //     $array[$k] = $arr['Multiple'][$i];
+       // }
+      //  for($k=($count1+$count2),$i=0;$i<$count3;$i++,$k++){
+      //      $array[$k] = $arr['Judge'][$i];
+      //  }
+      //  return $array;
+    }
+}
+?>

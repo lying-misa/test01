@@ -1,0 +1,274 @@
+<?php
+namespace Mobile\Controller;
+
+use Think\Controller;
+
+class MemberController extends Controller
+{
+	 function IsLogin(){
+		if(!isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID'] == NULL && $_SESSION['User']['UserID'] == '' &&
+		!isset($_SESSION['User']['Tel']) && $_SESSION['User']['Tel'] == NULL && $_SESSION['User']['Tel'] == ''){
+			$this->error("请登录","Member/Login");
+		}		
+	}
+	/**
+	* 用户登录
+	**/
+     function  login()
+    {
+        $practice_user = M('practice_user');
+        $returnStr['status'] = 0;
+		if(IS_POST){
+			$data['Tel'] = I('Tel','', 'trim');
+			$data['Password'] = I('Password','', 'trim');
+			if(!$data['Tel'])  {$returnStr['errormsg'] = '参数丢失：手机号为空';$this->ajaxReturn($returnStr);}
+			if(!$data['Password'])  {$returnStr['errormsg'] = '参数丢失：密码为空';$this->ajaxReturn($returnStr);}
+            if(!$this->IsHaveUser('Tel='.$data['Tel'])){
+                $returnStr['errormsg'] = '手机号不存在';$this->ajaxReturn($returnStr);
+            }else{
+                $data['Password'] = base64_encode($data['Password']);
+                $res = $practice_user->where($data)->find();
+                if(!$res) {$returnStr['status'] = 0;$returnStr['errormsg'] = '密码错误';$this->ajaxReturn($returnStr);}
+                else{
+                    $returnStr['status'] = 1;
+                    $returnStr['errormsg'] = '登录成功！';
+                    $_SESSION['User']['UserID'] = $res['ID'];
+                    $_SESSION['User']['Tel'] = $res['Tel'];
+					//$this->ajaxReturn($returnStr);
+					$this->success('登录成功！','/mobile/index/index');
+                }
+            }
+		}else
+			$this->display();
+    }
+	
+	/**
+	* 用户注册
+	**/
+     function  Reg()
+    {
+        $time = time();
+        $practice_user = M('practice_user');
+        $returnStr['status'] = 0;
+		if(IS_POST){
+			$data['Tel'] = I('Phone','', 'trim');
+			$data['Password'] = I('Password','', 'trim');
+			$data['Code'] = I('Code','', 'trim');
+			if(!$data['Tel'])  {$returnStr['errormsg'] = '参数丢失：手机号为空';$this->ajaxReturn($returnStr);}
+			if(!$data['Password'])  {$returnStr['errormsg'] = '参数丢失：密码为空';$this->ajaxReturn($returnStr);}
+			if(!$data['Code'])  {$returnStr['errormsg'] = '参数丢失：验证码为空';$this->ajaxReturn($returnStr);}
+			if($data['Code'] != $_SESSION['Code'] && $_SESSION['Code']!='' && $_SESSION['Code']!=null){
+				$returnStr['errormsg'] = '参数丢失：验证码错误';$this->ajaxReturn($returnStr);
+			}else{
+				if(!$this->IsHaveUser('Tel='.$data['Tel'])){
+					$data['CreateDate'] = $time;
+					$data['Status'] = 1;
+					$data['Password'] = base64_encode($data['Password']);
+					$res = $practice_user->add($data);
+					if($res){
+						$returnStr['status'] = 1;
+						$returnStr['errormsg'] = '添加成功！';
+						$_SESSION['User']['UserID'] = $res['ID'];
+						$_SESSION['User']['Tel'] = $res['Tel'];
+						$this->ajaxReturn($returnStr);
+					}else{
+						$returnStr['errormsg'] = '添加失败！';
+						$this->ajaxReturn($returnStr);
+					}
+
+				}else{
+					$returnStr['errormsg'] = '手机号已存在';$this->ajaxReturn($returnStr);
+				}
+			}
+		}else
+			$this->display();
+    }
+	
+	/**
+	* 是否用户存在
+	**/
+    protected function IsHaveUser($where){
+        $practice_user = M('practice_user');
+        $res = $practice_user->where($where)->find();
+		//echo $practice_user->getLastSql();
+        if($res['ID']>0) return $res;
+        else return false;
+    }
+	
+	/**
+	* 发送验证码
+	**/
+     function SendCode(){
+		$returnStr['Status'] = 0;
+		$tel = I('Phone','', 'trim');
+		$type = I('Type','', 'trim');
+		if(!$tel)  {$returnStr['errormsg'] = '参数丢失：手机号为空';$this->ajaxReturn($returnStr);}
+		if($type == 'Reg'){
+			if(!$this->IsHaveUser(array('Tel'=>$tel))){
+				$_SESSION['Code'] = $this->alisms($tel, "reg");
+				if($_SESSION['Code']){
+					$returnStr['Status'] = 1;
+					$returnStr['errormsg'] = '发送成功';
+				}else
+					$returnStr['errormsg'] = '发送失败';
+			}else {
+				$returnStr['errormsg'] = '手机号已存在';$this->ajaxReturn($returnStr);
+			}
+		}elseif($type='Findpwd'){
+			if($this->IsHaveUser(array('Tel'=>$tel))){
+				$_SESSION['Code'] = $this->alisms($tel, "reg");
+				if($_SESSION['Code']){
+					$returnStr['Status'] = 1;
+					$returnStr['errormsg'] = '发送成功';
+				}else
+					$returnStr['errormsg'] = '发送失败';
+			}else {
+				$returnStr['errormsg'] = '手机号不存在';$this->ajaxReturn($returnStr);
+			}
+		}
+        $this->ajaxReturn($returnStr);
+    }
+	
+  /**
+	* 发送验证码接口
+	**/
+    protected function alisms($tel,$category,$type='code')
+    {
+        header("Content-Type:text/html;charset=gb2312");
+		if($type == 'code'){
+			$randkey = rand(1000, 9999);
+			if ($category=="reg"){
+				$sinname= '注册验证';
+				$product= '聚才人力刷题系统注册';
+			}elseif ($category=="getpass"){
+				$sinname= '身份验证'; //
+				$product= '聚才人力刷题系统密码找回';
+			}
+			$sinname= iconv('GB2312', 'UTF-8', $sinname);
+			$sinnames= $sinname;
+			$products = '验证码：'.$randkey.'，您正在进行'.$product.'。请在页面输入完成验证，如非本人操作请忽略。【人才网ncrczpw.com】';
+			//$products= iconv('GB2312', 'UTF-8', $products);
+			//echo $products;
+			//	$strParam = 'mto='.$mto.'&mcon='.$products.'&cls=ks';
+			$strParam = 'action=send&userid=3054&account=zjjctk&password=LXTitp123&mobile='.$tel.'&content='.$products.'&sendTime=&extno=';
+			//$url = 'http://172.16.9.2/sendsms_TLC_utf.asp?'.$strParam;
+			$url = 'http://120.76.213.253:8888/sms.aspx?'.$strParam;
+			$result = file_get_contents($url);
+			return $randkey;
+		}elseif($type == 'notice'){
+			$products = '尊敬的用户，您的密码为：'.$category.'【人才网ncrczpw.com】';
+			$products= iconv('GB2312', 'UTF-8', $products);
+			$strParam = 'action=send&userid=3054&account=zjjctk&password=LXTitp123&mobile='.$tel.'&content='.$products.'&sendTime=&extno=';
+			$url = 'http://120.76.213.253:8888/sms.aspx?'.$strParam;
+			$result = file_get_contents($url);
+			return 1;
+		}
+    }
+
+    /**
+     * 我的收藏
+     */
+     function Collect(){
+		$this->IsLogin();
+        $_SESSION['User']['UserID'] = 1;
+        if(isset($_SESSION['User']['UserID']) &&$_SESSION['User']['UserID']!=NULL && $_SESSION['User']['UserID']!=''){
+            $user_collect = M('user_collect');
+            $data['UserID'] = $_SESSION['User']['UserID'];
+            $res = $user_collect->where($data)->getField('QID',true);
+			if(!$res && $res =="" && $res == null){
+				$this->assign('data',null);
+			}else{
+				$sts = implode(',',$res);
+				$where['ID'] = array('in',$sts);
+				$knowledge_qs = M('knowledge_qs');
+				$field = 'ID,Title,Options,Type,Answer';
+				$arr = $knowledge_qs->where($where)
+					->field($field)
+					->select();
+				$this->assign('data',$arr);
+			}
+        }else{
+            $this->error('请登录！');
+        }
+		$this->display();
+    }
+    /*
+     * 设置收藏
+     */
+     function  setCollect(){
+		IsLogin();
+        $returnStr['status'] = 0;
+        $user_collect = M('user_collect');
+        $data['UserID'] = $_SESSION['User']['UserID'];
+        $data['SubjectID'] = I('SubjectID', '', 'trim') ? I('SubjectID', '', 'trim') : 0;
+        $data['GradeID'] = I('GradeID', '', 'trim') ? I('GradeID', '', 'trim') : 0;
+        $data['QID'] = I('ID', '', 'trim') ? I('ID', '', 'trim') : 0;
+        $time = time();
+        $data['CreateDate'] = $time;
+        $res = $user_collect->add($data);
+        if($res){
+            $returnStr['status'] = 1;
+            $returnStr['errormsg'] = '收藏成功！';
+        }else{
+            $returnStr['errormsg'] = '收藏失败！';
+        }
+		$this->ajaxReturn($returnStr);
+    }
+     /*
+     * 取消收藏
+     */
+     function  cancelCollect(){
+		IsLogin();
+        $returnStr['status'] = 0;
+        $user_collect = M('user_collect');
+        $data['UserID'] = $_SESSION['User']['UserID'];
+        $data['SubjectID'] = I('SubjectID', '', 'trim') ? I('SubjectID', '', 'trim') : 0;
+        $data['GradeID'] = I('GradeID', '', 'trim') ? I('GradeID', '', 'trim') : 0;
+        $data['QID'] = I('ID', '', 'trim') ? I('ID', '', 'trim') : 0;
+        $time = time();
+        $data['CreateDate'] = $time;
+        $res = $user_collect->where($data)->delete();
+        if($res){
+            $returnStr['status'] = 1;
+            $returnStr['errormsg'] = '取消收藏成功！';
+        }else{
+            $returnStr['errormsg'] = '取消收藏失败！';
+        }
+		$this->ajaxReturn($returnStr);
+    }
+	/**
+	* 找回密码
+	*/
+	 function findpwd(){
+		$time = time();
+        $practice_user = M('practice_user');
+        $returnStr['status'] = 0;
+        if(IS_POST) {
+            $tel = I('Phone', '', 'trim');
+            $Code = I('Code', '', 'trim');
+            if (!$tel) {
+                $returnStr['errormsg'] = '参数丢失：手机号为空';
+                $this->ajaxReturn($returnStr);
+            }
+            if (!$Code) {
+                $returnStr['errormsg'] = '参数丢失：验证码为空';
+                $this->ajaxReturn($returnStr);
+            }
+            if ($res = $this->IsHaveUser('phone=' . $tel)) {
+                if ($Code != $_SESSION['Code'] && $_SESSION['Code'] != '' && $_SESSION['Code'] != null) {
+                    $returnStr['errormsg'] = '参数丢失：验证码错误';
+                    $this->ajaxReturn($returnStr);
+                } else {
+                    $password = base64_decode($res['Password']);
+                    $rss = $this->alisms($tel, $password, 'notice');
+                    $returnStr['errormsg'] = '密码已发送至您的手机';
+                    $this->ajaxReturn($returnStr);
+                }
+            } else {
+                $returnStr['errormsg'] = '手机号不存在';
+                $this->ajaxReturn($returnStr);
+            }
+        }else
+		    $this->display();
+	}
+}

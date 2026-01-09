@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>123456798</title>
+<link href="__PUBLIC__/mobile/css/mui.min.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/iconfont.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/common.css" rel="stylesheet"/>
+<script src="__PUBLIC__/mobile/js/mui.min.js"></script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav bg-theme ">
+	<a class="mui-icon mui-action-menu mui-icon-back mui-pull-left colorF"></a>
+  <h1 class="mui-title colorF">消息</h1>
+</header>
+<div class="mui-content mui-scroll-wrapper ">
+  <div class="mui-scroll">
+    <ul class="mui-table-view">
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-slider-right mui-disabled"> <a class="mui-btn mui-btn-blue">收藏</a> <a class="mui-btn mui-btn-red">删除</a> </div>
+        <div class="mui-slider-handle"> <a href="javascript:;"> <img class="mui-media-object mui-pull-left" src="__PUBLIC__/mobile/images/kefu@2x.png">
+          <div class="mui-media-body"> 官方客服
+            <p class='mui-ellipsis'>新功能上线</p>
+          </div>
+          </a> </div>
+      </li>
+		<li class="mui-table-view-cell mui-media">
+        <div class="mui-slider-right mui-disabled"> <a class="mui-btn mui-btn-blue">收藏</a> <a class="mui-btn mui-btn-red">删除</a> </div>
+        <div class="mui-slider-handle"> <a href="javascript:;"> <img class="mui-media-object mui-pull-left" src="__PUBLIC__/mobile/images/kefu@2x.png">
+          <div class="mui-media-body"> 系统消息
+            <p class='mui-ellipsis'>新功能上线</p>
+          </div>
+          </a> </div>
+      </li>
+    </ul>
+  </div>
+</div>
+</body>
+<script>
+	var old_back = mui.back;  
+	mui.back = function() {  
+	  var wobj = plus.webview.getWebviewById("id");  
+	  //id为父页面id，可以换成任何准备刷新页面的id
+	  wobj.reload(true);  
+	  old_back();
+	}
+
+	</script>
+</html>

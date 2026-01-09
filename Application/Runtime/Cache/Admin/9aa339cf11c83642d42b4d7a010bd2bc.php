@@ -1,0 +1,115 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="/Public/css/pintuer.css">
+<link rel="stylesheet" href="/Public/css/admin.css">
+<script src="/Public/js/jquery.js"></script>
+<script src="/Public/js/pintuer.js"></script>
+</head>
+<body>
+
+  <div class="panel admin-panel">
+    <div class="panel-head"><strong class="icon-reorder"> 真题管理</strong> <a href="" style="float:right; display:none;">添加字段</a></div>
+    <div class="padding border-bottom">
+      <ul class="search" style="padding-left:10px;">
+        <li> <a class="button border-main icon-plus-square-o" style="padding:5px 15px;" href="/admin/OldExam/EditExam.html"> 添加真题</a> </li>
+      <form method="post" class="form-x" action="/Admin/OldExam/Index">
+        <li>
+          <input type="text" placeholder="请输入真题名称" name="Name" class="input" style="width:250px; line-height:17px;display:inline-block" value="<?php echo ($map["Name"]); ?>"/>
+          <input type='submit' class="button border-main icon-search" style="padding:5px 15px;" id="changesearch" name="" value="搜索">
+      </form>    
+      </ul>
+    </div>
+    <form method="post" action="/Admin/OldExam/DelExam" id="listform">
+    <table class="table table-hover text-center">
+      <tr>
+        <th width="100" style="text-align:left; padding-left:20px;">ID</th>
+        <th>真题名称</th>
+        <th>真题状态</th>
+        <th>创建时间</th>
+        <th width="320">操作</th>
+      </tr>
+		<?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$list): $mod = ($i % 2 );++$i;?><tr>
+          <td style="text-align:left; padding-left:20px;"><input type="checkbox" name="ID[]" value="<?php echo ($list["ID"]); ?>" /><?php echo ($list["ID"]); ?></td>
+          <td><?php echo ($list["Name"]); ?></td>
+			<td><?php if($list["Status"] == 1): ?><span class="text-green">发布阶段</span><?php else: ?><span class="text-yellow">测试阶段</span><?php endif; ?></td>
+          <td><?php echo (date('Y-m-d',$list["CreateDate"])); ?></td>
+          <td>
+          	<div class="button-group">
+          	<a class="button button-little border-main" href="/admin/OldExam/EditExam/ExamID/<?php echo ($list["ID"]); ?>"><span class="icon-edit"></span>修改</a>
+          	<a class="button button-little border-red delsingle" href="javascript:void(0)" data-id="<?php echo ($list["ID"]); ?>" ><span class="icon-trash-o"></span>删除</a>
+          	<a class="button button-little border-yellow" href="/admin/OldExam/ShowExam/ExamID/<?php echo ($list["ID"]); ?>"><span class="icon-file-text-o" target="_blank"></span>查看考卷</a>
+          	<a class="button button-little border-yellow" href="/admin/OldExam/MakePages/ExamID/<?php echo ($list["ID"]); ?>" onclick="return confirm('是否确定生成？生成的将会替代以前的真题试卷')"><span class="icon-file-text-o"></span>生成考卷</a>
+          	<!--<a class="button button-little border-gray J_code" href="javascript:void(0)" data-id="<?php echo ($list["ID"]); ?>"><span class="icon-file-text-o"></span>随机码</a>-->
+			<a class="button button-little border-blue  importQuestions" data-id="123" href="javascript:void(0)"><span class="icon-download"></span>导入考题</a>
+          	</div>
+          </td>
+        </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+
+
+
+      <tr>
+        <td style="text-align:left; padding:19px 0;padding-left:20px;"><input type="checkbox" id="checkall"/>
+          全选 </td>
+        <td colspan="10" style="text-align:left;padding-left:20px;"><a href="javascript:void(0)" class="button border-red icon-trash-o" style="padding:5px 15px;" id="DelSelect" > 删除</a>  </td>
+      </tr>
+
+      <tr>
+        <td colspan="10"><div class="pagelist"><?php echo ($page); ?></div></td>
+      </tr>
+    </table>
+    </form>
+  </div>
+
+
+
+<form id="importbox" name="FormData" action="/admin/OldQuestions/UploadExcel"  enctype="multipart/form-data" method="post">
+	<div class="hidebox" id="hidebox">
+		<div class="dialog open dialog_hidebox">
+			<div class="dialog-head">
+				<span class="dialog-close close" id="hide_close"></span><strong>导入题目</strong>
+			</div>
+			<div class="dialog-body">
+				
+				<div class="importline"><input type="file" name="excelData" ></div>
+				<div class="importline">
+					<select class="input w50" name="Type" data-validate="required:请选择分类">
+                        <option value="">请选择导入题型</option>
+                        <option value="1">单选题</option>
+                        <option value="2">多选题</option>
+                        <option value="3">判断题</option>
+                        <option value="4">简答题</option>
+                        <option value="5">理论分析题</option>
+                        <option value="6">论文</option>
+				  </select>
+				</div>
+				
+				 <div class="importline">
+					 <input type="hidden" name="ID" >
+				 	<input type="submit" value="导入" class="button border-blue">
+				 </div>
+				
+			</div>
+
+		</div>
+	</div>
+</form>
+
+
+</body>
+<script src="/Public/js/admin_common.js"></script>
+
+<script>
+	$(".importQuestions").on("click",function(){
+		$("#hidebox").find("input[name='ID']").val($(this).data("id"));
+		$("#hidebox").show();
+	});
+
+</script>
+
+</html>

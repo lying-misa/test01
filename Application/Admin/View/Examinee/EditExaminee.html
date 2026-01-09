@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span>修改考生信息</strong></div>
+  <div class="body-content">
+    <form method="post" class="form-x" action="/admin/Examinee/UpdateExaminee">
+      <div class="form-group">
+        <div class="label">
+          <label>姓名：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Username}" name="Username" data-validate="required:请输入姓名" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>性别：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Sex}" name="Sex" data-validate="required:请输入性别" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>出生日期：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Brithday}" name="Brithday" data-validate="required:请输入出生日期" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>相片：</label>
+        </div>
+        <div class="field">
+         	<img height="150" src="{$data.photo}" alt="">
+          	<input type="hidden" class="input w50" value="{$data.Photo}" name="Photo"  />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>身份证号：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Identity}" name="Identity" data-validate="required:请输入身份证号" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>电话：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Tel}" name="Tel" data-validate="required:请输入电话" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>准考证号：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.ZKZH}" name="ZKZH" data-validate="required:请输入准考证号" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考场号：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.KCH}" name="KCH" data-validate="required:请输入考场号" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>座位号：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.ZWH}" name="ZWH" data-validate="required:请输入座位号" />
+          <div class="tips"></div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <div class="label">
+          <label>考点名称：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.KDMC}" name="KDMC" data-validate="required:请输入考点名称" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考点地址：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.KDDZ}" name="KDDZ" data-validate="required:请输入标题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考试日期：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.KSRQ}" name="KSRQ" data-validate="required:请输入标题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考试起止时间：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.KSQZSJ}" name="KSQZSJ" data-validate="required:请输入标题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考试科目：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.KSKM}" name="KSKM" data-validate="required:请输入标题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>岗位名称：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Agency}" name="Agency" data-validate="required:请输入标题" />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>招考单位：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.ZKDW}" name="ZKDW" data-validate="required:请输入标题" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考生状态：</label>
+        </div>
+        <div class="field">
+          <div class="button-group radio">
+			  <label class="button <if condition='$data.Status eq 1'>active</if>">
+             	<span class="icon icon-check"></span>          	
+              <input name="Status" value="1"  type="radio" <if condition='$data.Status eq 1'>checked="checked"</if>>可用
+          </label> 
+          <label class="button <if condition='$data.Status eq 0'>active</if>">
+         	  <span class="icon icon-check"></span>             
+              <input name="Status" value="0" type="radio" <if condition='$data.Status eq 0'>checked="checked"</if>>不可用             
+          </label>             
+           </div>       
+        </div>
+     </div>
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+         <input type="hidden" value="{$data.ID}" name="ExamineeID">
+         <input type="hidden" value="{$data.ExamID}" name="ExamID">
+         <input type="hidden" value="{$data.ClassID}" name="ClassID">
+          <button class="button bg-main icon-check-square-o" type="submit"> 提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+<link rel="stylesheet" href="__PUBLIC__/css/jquery.datetimepicker.min.css">
+<script src="__PUBLIC__/js/jquery.datetimepicker.full.min.js"></script>
+<script>
+//时间选择器
+$(".date_input").datetimepicker({
+	format: 'Y-m-d H:i',
+	step:10,
+});
+$.datetimepicker.setLocale('zh');
+</script>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+<div class="panel admin-panel">
+  <div class="panel-head" id="add"><strong><span class="icon-pencil-square-o"></span>{$title}</strong></div>
+  <div class="body-content">
+    <form method="post" class="form-x" id="save_examform" action="/admin/OldExam/SaveExam">
+      <div class="form-group">
+        <div class="label">
+          <label>真题名称：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" value="{$data.Name}" name="Name" data-validate="required:请输入真题名称" />
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>真题所属年限（例如：2018）：</label>
+        </div>
+        <div class="field">
+          <input type="text" class="input w50" name="Org" value="{$data.Org}"  data-validate="required:真题所属年限" required="例如：2018"/>
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>相关描述：</label>
+        </div>
+        <div class="field">
+          <textarea class="input w50" name="Description" style=" height:150px;" data-validate="required:请输入相关描述">{$data.Description}</textarea>
+          <div class="tips"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label>考试状态：</label>
+        </div>
+        <div class="field">
+          <div class="button-group radio">
+            <label class="button <if condition='$data.Status eq 0'>active</if>"> <span class="icon icon-check"></span>
+              <input name="Status" value="0"  type="radio" <if condition='$data.Status eq 0'>checked="checked"</if>>
+              测试阶段 </label>
+            <label class="button <if condition='$data.Status eq 1'>active</if>"> <span class="icon icon-check"></span>
+              <input name="Status" value="1" type="radio" <if condition='$data.Status eq 1'>checked="checked"</if>>
+              发布阶段 </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="label">
+          <label></label>
+        </div>
+        <div class="field">
+         <input type="hidden" value="{$_GET['ExamID']}" name="ExamID">
+          <button class="button bg-main icon-check-square-o" type="button" id="J_SaveExam"> 提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+<link rel="stylesheet" href="__PUBLIC__/css/jquery.datetimepicker.min.css">
+<script src="__PUBLIC__/js/jquery.datetimepicker.full.min.js"></script>
+<script>
+//时间选择器
+$(".date_input").datetimepicker({
+	format: 'Y-m-d H:i',
+	step:10,
+});
+$.datetimepicker.setLocale('zh');
+
+$("#J_SaveExam").click(function(){
+	$("#save_examform").ajaxSubmit(function(){
+		var form=$("#save_examform");
+		var url=form.attr("action");
+		$.ajax({
+			type: 'POST', 
+			data: form.serialize(), 
+			url: url,
+			success: function(result){
+				alert(result.info);
+				if(result.status){
+					$(location).attr('href', '/admin/OldExam');
+				}
+			},
+		});
+	});
+});
+
+
+
+</script>
+</html>

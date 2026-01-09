@@ -1,0 +1,546 @@
+HTML {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 100%; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+BODY {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 100%; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+DIV {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 100%; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+SPAN {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 100%; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+BODY {
+	FONT-SIZE: 12px; BACKGROUND: url(body_bg.jpg) center top; COLOR: #333333; FONT-FAMILY: Arial, "宋体"
+}
+OL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+LI {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+DL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+DT {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+DD {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+SPAN {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; LIST-STYLE-TYPE: none
+}
+IMG {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+.blue A {
+	COLOR: #02469f
+}
+.blue A:link {
+	FONT-SIZE: 12px; TEXT-DECORATION: none
+}
+.xia {
+	WIDTH: 100%; PADDING-TOP: 5px
+}
+.xia TR {
+	BACKGROUND: url(/images/list_xian.jpg) repeat-x left bottom
+}
+.all {
+	MARGIN: 0px auto; WIDTH: 1000px; HEIGHT: auto; BACKGROUND-COLOR: #fff
+}
+.sec1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; BACKGROUND: url(/images/tab_a.gif) no-repeat left bottom; CURSOR: hand; COLOR: #cc0000
+}
+.sec2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; BACKGROUND: url(/images/tab_b.gif) no-repeat left bottom; CURSOR: hand; COLOR: #666666
+}
+.sec3 {
+	FONT-SIZE: 14px; BACKGROUND: url(/images/tab_a.jpg); CURSOR: hand; COLOR: #656767; TEXT-ALIGN: center
+}
+.sec4 {
+	FONT-SIZE: 14px; BACKGROUND: url(/images/yb_back.jpg); CURSOR: hand; COLOR: #939797; TEXT-ALIGN: center
+}
+.sec12 {
+	FONT-SIZE: 14px; CURSOR: hand; COLOR: #343434
+}
+.sec12 A:link {
+	FONT-SIZE: 14px; CURSOR: hand; COLOR: #343434
+}
+.sec12 A:visited {
+	FONT-SIZE: 14px; CURSOR: hand; COLOR: #343434
+}
+.sec12 A:hover {
+	FONT-SIZE: 14px; CURSOR: hand; COLOR: #343434
+}
+.sec22 {
+	BACKGROUND-POSITION: 50% top; FONT-WEIGHT: bold; FONT-SIZE: 14px; BACKGROUND-IMAGE: url(/images/on2.jpg); CURSOR: hand; COLOR: #d9080b; BACKGROUND-REPEAT: no-repeat
+}
+.sec22 A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d9080b
+}
+.sec22 A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d9080b
+}
+.sec22 A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d9080b
+}
+.sec13 {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec13 A:link {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec13 A:visited {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec13 A:hover {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec23 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; BACKGROUND-IMAGE: url(/images/on3.jpg); CURSOR: hand; COLOR: #ffffff; BACKGROUND-REPEAT: no-repeat
+}
+.sec23 A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: #ffffff
+}
+.sec23 A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: #ffffff
+}
+.sec23 A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: #ffffff
+}
+.sec14 {
+	FONT-SIZE: 12px; BACKGROUND-IMAGE: url(/images/out4.jpg); CURSOR: hand; COLOR: #333333; BACKGROUND-REPEAT: no-repeat
+}
+.sec14 A:link {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec14 A:visited {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec14 A:hover {
+	FONT-SIZE: 12px; CURSOR: hand; COLOR: #333333
+}
+.sec24 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; BACKGROUND-IMAGE: url(/images/on4.jpg); CURSOR: hand; COLOR: #ca4701; BACKGROUND-REPEAT: no-repeat
+}
+.sec24 A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: #ca4701
+}
+.sec24 A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: #ca4701
+}
+.sec24 A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; CURSOR: hand; COLOR: #ca4701
+}
+.w A:link {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.w A:visited {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.w A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.w1 A:link {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.w1 A:visited {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.w1 A:hover {
+	FONT-SIZE: 14px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.p14 A:link {
+	FONT-SIZE: 14px; COLOR: #005ba6; TEXT-DECORATION: none
+}
+.p14 A:visited {
+	FONT-SIZE: 14px; COLOR: #005ba6; TEXT-DECORATION: none
+}
+.p14 A:hover {
+	FONT-SIZE: 14px; COLOR: #000000; TEXT-DECORATION: none
+}
+.v A:link {
+	FONT-SIZE: 14px; TEXT-DECORATION: none
+}
+.v A:visited {
+	FONT-SIZE: 14px; TEXT-DECORATION: none
+}
+.v A:hover {
+	FONT-SIZE: 14px; TEXT-DECORATION: none
+}
+.l A:link {
+	FONT-SIZE: 14px; TEXT-DECORATION: none
+}
+.l A:visited {
+	FONT-SIZE: 14px; TEXT-DECORATION: none
+}
+.l A:hover {
+	FONT-SIZE: 14px; TEXT-DECORATION: none
+}
+.txt {
+	FONT-SIZE: 12px; COLOR: #999999; LINE-HEIGHT: 22px; FONT-STYLE: normal; FONT-FAMILY: "宋体", Arial
+}
+A:link {
+	FONT-SIZE: 12px; COLOR: #333333; LINE-HEIGHT: 23px; TEXT-DECORATION: none
+}
+A:visited {
+	FONT-SIZE: 12px; COLOR: #434343; LINE-HEIGHT: 23px; TEXT-DECORATION: none
+}
+A:active {
+	FONT-SIZE: 12px; COLOR: #666; LINE-HEIGHT: 23px; TEXT-DECORATION: none
+}
+A:hover {
+	FONT-SIZE: 12px; COLOR: #666; LINE-HEIGHT: 23px; TEXT-DECORATION: underline
+}
+A.a01:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; FILTER: Glow(Color=#FFFFFF, Strength=1); COLOR: #ffffff; LINE-HEIGHT: 21px; FONT-FAMILY: Arial, "宋体"; TEXT-DECORATION: none
+}
+A.a01:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; LINE-HEIGHT: 21px; FONT-FAMILY: Arial, "宋体"; TEXT-DECORATION: none
+}
+A.a01:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffff00; LINE-HEIGHT: 21px; FONT-FAMILY: Arial, "宋体"; TEXT-DECORATION: none
+}
+A.a01:active {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; LINE-HEIGHT: 21px; FONT-FAMILY: Arial, "宋体"; TEXT-DECORATION: none
+}
+TABLE {
+	FONT-SIZE: 12px; COLOR: #424242; LINE-HEIGHT: 23px; FONT-FAMILY: "宋体", Arial
+}
+.r_title {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ff3300; FONT-FAMILY: Arial, "宋体"
+}
+.w_txt {
+	FONT-SIZE: 12px; COLOR: #ffffff; FONT-FAMILY: Arial, "宋体"
+}
+.g_txt {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #2db1b9; FONT-FAMILY: Arial, "宋体"
+}
+HR {
+	BORDER-RIGHT: #ffffff 1px dotted; BORDER-TOP: #d2ccbf 1px dotted; BORDER-LEFT: #ffffff 1px dotted; COLOR: #ececec; BORDER-BOTTOM: #ffffff 1px dotted
+}
+INPUT {
+	BORDER-RIGHT: #d5d5d5 1px solid; BORDER-TOP: #d5d5d5 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #d5d5d5 1px solid; BORDER-BOTTOM: #d5d5d5 1px solid; FONT-FAMILY: "宋体", Arial
+}
+UNKNOWN {
+	FONT-SIZE: 12px; LINE-HEIGHT: 20pt; FONT-FAMILY: Arial, "宋体"
+}
+.hand {
+	CURSOR: hand
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 20px; COLOR: #666666; FONT-FAMILY: Arial, "宋体"
+}
+TEXTAREA {
+	BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; BORDER-LEFT: #999999 1px solid; COLOR: #2d2d2d; BORDER-BOTTOM: #999999 1px solid
+}
+.nobod {
+	BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none
+}
+SELECT {
+	BORDER-RIGHT: #a5a9ad 1px solid; BORDER-TOP: #a5a9ad 1px solid; BORDER-LEFT: #a5a9ad 1px solid; BORDER-BOTTOM: #a5a9ad 1px solid
+}
+.en {
+	FONT-SIZE: 12px; LINE-HEIGHT: 23px; FONT-FAMILY: Arial
+}
+.line1 {
+	BORDER-RIGHT: #e1e1e1 1px solid; BORDER-TOP: #e1e1e1 1px solid; BORDER-LEFT: #e1e1e1 1px solid
+}
+.line2 {
+	BORDER-TOP: #e1e1e1 1px solid
+}
+.mnavt {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #d91507; LINE-HEIGHT: 25px
+}
+.mnavt1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #0456c2
+}
+.mnavt2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #195cb5
+}
+.14red {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d90909; TEXT-DECORATION: none
+}
+.14red A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d90909; TEXT-DECORATION: none
+}
+.14red A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d90909; TEXT-DECORATION: none
+}
+.14red A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; CURSOR: hand; COLOR: #d90909; TEXT-DECORATION: underline
+}
+.witet14 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.wite14 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; LINE-HEIGHT: 34px; TEXT-DECORATION: none
+}
+.14wite A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.14wite A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.14wite A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #fbf4ca; TEXT-DECORATION: underline
+}
+.title {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.title A:link {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.title A:visited {
+	FONT-SIZE: 14px; COLOR: #333333; TEXT-DECORATION: none
+}
+.title A:hover {
+	FONT-SIZE: 14px; COLOR: #d90909; TEXT-DECORATION: underline
+}
+.top {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.top A:link {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.top A:visited {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.top A:hover {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.12 {
+	FONT-SIZE: 12px; COLOR: #0039a0; TEXT-DECORATION: none
+}
+.12 A:link {
+	FONT-SIZE: 12px; COLOR: #0039a0; TEXT-DECORATION: none
+}
+.12 A:visited {
+	FONT-SIZE: 12px; COLOR: #0039a0; TEXT-DECORATION: none
+}
+.12 A:hover {
+	FONT-SIZE: 12px; COLOR: #0039a0; TEXT-DECORATION: none
+}
+.zw {
+	FONT-SIZE: 12px; COLOR: #333333; TEXT-DECORATION: none
+}
+.zw A:link {
+	FONT-SIZE: 12px; COLOR: #333333; TEXT-DECORATION: none
+}
+.zw A:visited {
+	FONT-SIZE: 12px; COLOR: #333333; TEXT-DECORATION: none
+}
+.zw A:hover {
+	FONT-SIZE: 12px; COLOR: #dd0000; TEXT-DECORATION: underline
+}
+.ws {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+.ws A:link {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+.ws A:visited {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+.ws A:hover {
+	COLOR: #fff; TEXT-DECORATION: underline
+}
+.zm {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.zm A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.zm A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.zm A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #d90909; TEXT-DECORATION: underline
+}
+.zm2 {
+	FONT-SIZE: 12px; COLOR: #d70909; TEXT-DECORATION: underline
+}
+.zm2 A:link {
+	FONT-SIZE: 12px; COLOR: #d70909; TEXT-DECORATION: underline
+}
+.zm2 A:visited {
+	FONT-SIZE: 12px; COLOR: #d70909; TEXT-DECORATION: underline
+}
+.zm2 A:hover {
+	FONT-SIZE: 12px; COLOR: #333333; TEXT-DECORATION: underline
+}
+.zx {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #323433; TEXT-DECORATION: none
+}
+.zx A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #323433; TEXT-DECORATION: none
+}
+.zx A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #323433; TEXT-DECORATION: none
+}
+.zx A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #323433; TEXT-DECORATION: underline
+}
+.fw {
+	FONT-SIZE: 12px; COLOR: #da0807; TEXT-DECORATION: none
+}
+.fw A:link {
+	FONT-SIZE: 12px; COLOR: #da0807; TEXT-DECORATION: none
+}
+.fw A:visited {
+	FONT-SIZE: 12px; COLOR: #da0807; TEXT-DECORATION: none
+}
+.fw A:hover {
+	FONT-SIZE: 12px; COLOR: #da0807; TEXT-DECORATION: underline
+}
+.bai12 A:link {
+	FONT-SIZE: 12px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.bai12 A:visited {
+	FONT-SIZE: 12px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.bai12 A:hover {
+	FONT-SIZE: 12px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.lan12 {
+	FONT-SIZE: 12px; COLOR: #195cb5
+}
+.lan12 A:link {
+	FONT-SIZE: 12px; COLOR: #195cb5
+}
+.lan12 A:visited {
+	FONT-SIZE: 12px; COLOR: #3970c3
+}
+.lan12 A:hover {
+	FONT-SIZE: 12px; COLOR: #3970c3; TEXT-DECORATION: none
+}
+.bai A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.bai A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.bai A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ff0000; TEXT-DECORATION: none
+}
+.lan {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #c90000; TEXT-DECORATION: none
+}
+.lan A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #c90000; TEXT-DECORATION: none
+}
+.lan A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #c90000; TEXT-DECORATION: none
+}
+.lan A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #c90000; TEXT-DECORATION: none
+}
+.lanmu {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.lanmu A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.lanmu A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #d90909; TEXT-DECORATION: none
+}
+.lanmu A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #d90909; TEXT-DECORATION: underline
+}
+.gengduo {
+	FONT-SIZE: 12px; COLOR: #fbf4ca; TEXT-DECORATION: none
+}
+.gengduo A:link {
+	FONT-SIZE: 12px; COLOR: #fbf4ca; TEXT-DECORATION: none
+}
+.gengduo A:visited {
+	FONT-SIZE: 12px; COLOR: #fbf4ca; TEXT-DECORATION: none
+}
+.gengduo A:hover {
+	FONT-SIZE: 12px; COLOR: #fbf4ca; TEXT-DECORATION: underline
+}
+.xx {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #d70a07; TEXT-DECORATION: none
+}
+.xx A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #d70a07; TEXT-DECORATION: none
+}
+.xx A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #d70a07; TEXT-DECORATION: none
+}
+.xx A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #d70a07; TEXT-DECORATION: underline
+}
+.gengduo1 {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.gengduo1 A:link {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.gengduo1 A:visited {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: none
+}
+.gengduo1 A:hover {
+	FONT-SIZE: 12px; COLOR: #666666; TEXT-DECORATION: underline
+}
+.gengduo2 {
+	FONT-SIZE: 12px; COLOR: #04b90c; TEXT-DECORATION: none
+}
+.gengduo2 A:link {
+	FONT-SIZE: 12px; COLOR: #04b90c; TEXT-DECORATION: none
+}
+.gengduo2 A:visited {
+	FONT-SIZE: 12px; COLOR: #04b90c; TEXT-DECORATION: none
+}
+.gengduo2 A:hover {
+	FONT-SIZE: 12px; COLOR: #04b90c; TEXT-DECORATION: none
+}
+.zhuanti {
+	FONT-SIZE: 12px; COLOR: #ca4500; LINE-HEIGHT: 23px; TEXT-DECORATION: none
+}
+.zhuanti A:link {
+	FONT-SIZE: 12px; COLOR: #ca4500; LINE-HEIGHT: 23px; TEXT-DECORATION: none
+}
+.zhuanti A:visited {
+	FONT-SIZE: 12px; COLOR: #ca4500; LINE-HEIGHT: 23px; TEXT-DECORATION: none
+}
+.zhuanti A:hover {
+	FONT-SIZE: 12px; COLOR: #ca4500; LINE-HEIGHT: 23px; TEXT-DECORATION: underline
+}
+.p1 {
+	FONT-SIZE: 16px; COLOR: #000000; LINE-HEIGHT: 180%; FONT-FAMILY: "宋体"; TEXT-DECORATION: none
+}
+.bai {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.bai1 {
+	FONT-SIZE: 12px; COLOR: #ffffff; TEXT-DECORATION: none
+}
+.bm {
+	FONT-SIZE: 12px; COLOR: #003c7d; TEXT-DECORATION: none
+}
+.bm A:link {
+	FONT-SIZE: 12px; COLOR: #003c7d; TEXT-DECORATION: none
+}
+.bm A:visited {
+	FONT-SIZE: 12px; COLOR: #003c7d; TEXT-DECORATION: none
+}
+.bm A:hover {
+	FONT-SIZE: 12px; COLOR: #ff0000; TEXT-DECORATION: none
+}
+.hong {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ff0000; TEXT-DECORATION: none
+}
+.hong A:link {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ff0000; TEXT-DECORATION: none
+}
+.hong A:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ff0000; TEXT-DECORATION: none
+}
+.hong A:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; COLOR: #ff0000; TEXT-DECORATION: underline
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+
+  <div class="panel admin-panel">
+    <volist name="res.Questions" id="result" key="key">
+        <if condition="$key eq 1">
+          <h2>一、单选题</h2>
+        <elseif condition="$key eq 2"/>
+          <h2>二、多选题</h2>
+        <elseif condition="$key eq 3"/>
+          <h2>二、判断题</h2>
+        <elseif condition="$key eq 4"/>
+          <h2>二、简答题</h2>
+        <elseif condition="$key eq 5"/>
+          <h2>二、理论分析题</h2>
+        <elseif condition="$key eq 6"/>
+          <h2>二、论文题</h2>
+      </if>
+      <volist name="result" id="queslist" key="fkey">
+        <div class="que_line">
+          <div class="que_tit">({$key+1})&nbsp;{$queslist.Title}</div>
+          <if condition="$queslist.TW eq 2">
+            <div class="que_val"><img src="/{$queslist.TWPic}" alt="" height="180"></div>
+          </if>
+          <div class="que_val">
+            <ul class="list-unstyle height">
+              <volist name="queslist.Options" id="answer">
+                <if condition="$answer neq NULL ">
+                  <if condition="$queslist.Type eq 1">
+                    <li><input type="radio" name="Reply[{$fkey-1}]" value="{$key+1}">{$answer}</li>
+                    <elseif condition="$queslist.Type eq 2"/>
+                    <li><input type="checkbox" name="Reply[{$fkey-1}][]" value="{$key+1}">{$answer}</li>
+                    <else/>
+                    <li><input type="radio" name="Reply[{$fkey-1}]" value="{$key+1}">{$answer}</li>
+                  </if>
+                </if>
+              </volist>
+            </ul>
+          </div>
+        </div>
+      </volist>
+    </volist>
+  </div>
+
+
+
+
+</body>
+<script src="__PUBLIC__/js/admin_common.js"></script>
+<script>
+
+</script>
+</html>

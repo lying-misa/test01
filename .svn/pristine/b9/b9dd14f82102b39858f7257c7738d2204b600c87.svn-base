@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>题库练习</title>
+	<link href="__PUBLIC__/mobile/css/mui.min.css" rel="stylesheet"/>
+	<link href="__PUBLIC__/mobile/css/iconfont.css" rel="stylesheet"/>
+	<link href="__PUBLIC__/mobile/css/common.css" rel="stylesheet"/>
+    <script src="__PUBLIC__/mobile/js/mui.min.js"></script>
+    
+
+</head>
+<body>
+	<!-- 侧滑导航根容器 -->
+<div class="mui-off-canvas-wrap mui-draggable">
+  <!-- 菜单容器 -->
+	<include file="Public/mobile/aside.html" />
+  <!-- 主页面容器 -->
+  <div class="mui-inner-wrap">
+    <!-- 主页面标题 -->
+    <header class="mui-bar mui-bar-nav">
+      <a class="mui-icon mui-action-menu mui-icon-bars mui-pull-left" href="#asideBar"></a>
+      <h1 class="mui-title">题库练习</h1>
+		<a class="mui-icon mui-action-menu mui-icon-chat mui-pull-right" href="/mobile/member/message.html"></a>
+    </header>
+    <div class="mui-content mui-scroll-wrapper">
+        <div class="mui-scroll">
+		  	<div class="mui-slider">
+			  <div class="mui-slider-group mui-slider-loop">
+				<!--支持循环，需要重复图片节点-->
+				<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="__PUBLIC__/mobile/images/banner.png"/></a></div>
+				<div class="mui-slider-item"><a href="#"><img src="__PUBLIC__/mobile/images/banner.png"/></a></div>
+				  <div class="mui-slider-item"><a href="#"><img src="__PUBLIC__/mobile/images/banner.png" /></a></div>
+				  <div class="mui-slider-item"><a href="#"><img src="__PUBLIC__/mobile/images/banner.png" /></a></div>
+				  <div class="mui-slider-item"><a href="#"><img src="__PUBLIC__/mobile/images/banner.png" /></a></div>
+				  <div class="mui-slider-item"><a href="#"><img src="__PUBLIC__/mobile/images/cebian.png" /></a></div>
+				<!--支持循环，需要重复图片节点-->
+				<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="__PUBLIC__/mobile/images/banner.png"/></a></div>
+			  </div>
+			</div>
+		<div class="mui-content">
+			<div class="mui-row index_tab">
+				<volist name="list" id="vo">
+					<div class="mui-col-2">
+						<div class="tab_link">
+							<img src="__PUBLIC__/mobile/images/img1.png">
+						</div>
+						<div class="tab_txt"><a href="Practice/Index/action/KnowledgePractice/KnowledgeID/{$vo.ID}">{$vo.Name}</a></div>
+					</div>
+				</volist>
+			</div>
+			<div class="split-block"></div>
+				<div class="line_box">
+			  		<div class="mui-ellipsis line_title">随机练习</div>
+		            <div class="mui-table">
+		                <div class="mui-table-cell mui-col-xs-10">
+		                    
+							<div class="mui-row line color6">
+								<div class="mui-col-6 mui-col-xs-6"><i class="iconfont icon-liebiao icon_yellow"></i>题目数量:{$rec.CountRand}</div>
+								<div class="mui-col-6 mui-col-xs-6"><i class="iconfont icon-zan icon_purple"></i>正确率:{$rec.RandRate}%</div>
+							</div>
+							<div class="mui-row line color6">
+								<div class="mui-col-4 mui-col-xs-4"><i class="iconfont icon-fabu icon_blue"></i>已做:{$rec.CountDid}</div>
+								<div class="mui-col-4 mui-col-xs-4">正确:{$rec.CountRight}</div>
+								<div class="mui-col-4 mui-col-xs-4">错误:{$rec.CountWrong}</div>
+							</div>
+		                </div>
+		                <div class="mui-table-cell mui-col-xs-2 mui-text-right">
+							<a href="/mobile/Practice/Index/action/RandPractice/SubjectID/{$SubjectID}/GradeID/{$GradeID }"><div class="lint_btn yellow">使用</div></a>
+		                </div>
+		            </div>
+				</div>
+			    <div class="split-block"></div>
+			    <div class="line_box">
+			  		<div class="mui-ellipsis line_title">错题练习</div>
+		            <div class="mui-table">
+		                <div class="mui-table-cell mui-col-xs-10">
+							<div class="mui-row line color6">
+								<div class="mui-col-6 mui-col-xs-6"><i class="iconfont icon-liebiao icon_yellow"></i>题目数量:{$rec.CountWrong}</div>
+								<div class="mui-col-6 mui-col-xs-6"><i class="iconfont icon-zan icon_purple"></i>正确率:{$rec.recondRandRate}%</div>
+							</div>
+							<div class="mui-row line color6">
+								<div class="mui-col-4 mui-col-xs-4"><i class="iconfont icon-fabu icon_blue"></i>已做:{$rec.recondCountWrong}</div>
+								<div class="mui-col-4 mui-col-xs-4">正确:{$rec.recondCountWrongRight}</div>
+								<div class="mui-col-4 mui-col-xs-4">错误:{$rec.recondCountRight}</div>
+							</div>
+		                </div>
+		                <div class="mui-table-cell mui-col-xs-2 mui-text-right">
+		                    <a href="/mobile/Practice/Index.html"><div class="lint_btn blue">使用</div></a>
+		                </div>
+		            </div>
+				</div>
+			   <div class="split-block"></div>
+				<div class="line_box">
+			  		<div class="mui-ellipsis line_title">在线模考</div>
+		            <div class="mui-table">
+						
+		                <div class="mui-table-cell mui-col-xs-10">
+		                    
+							<div class="mui-row line color6">
+								<div class="mui-col-6 mui-col-xs-6"><i class="iconfont icon-liebiao icon_yellow"></i>题目数量:0</div>
+								<div class="mui-col-6 mui-col-xs-6"><i class="iconfont icon-zan icon_purple"></i>正确率:100%</div>
+							</div>
+							<div class="mui-row line color6">
+								<div class="mui-col-4 mui-col-xs-4"><i class="iconfont icon-fabu icon_blue"></i>已做:0</div>
+								<div class="mui-col-4 mui-col-xs-4">正确:0</div>
+								<div class="mui-col-4 mui-col-xs-4">错误:0</div>
+							</div>
+						</div>
+							<div class="mui-table-cell mui-col-xs-2 mui-text-right">
+								<a href="/mobile/practice/ExamList"><div class="lint_btn purple">使用</div></a>
+							</div>
+						
+					</div>
+				</div>
+			
+			
+			
+			
+		</div>
+        
+    </div>  
+  </div>
+</div>
+</div>
+
+
+	
+</body>
+<script>
+mui.init();
+//获得slider插件对象
+var gallery = mui('.mui-slider');
+gallery.slider({
+  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+});
+//再加入这段代码
+(function($){
+    $(".mui-scroll-wrapper").scroll({
+        //bounce: false,//滚动条是否有弹力默认是true
+        indicators: false, //是否显示滚动条,默认是true
+    }); 
+})(mui);
+mui('body').on('tap','a',function(){
+    window.top.location.href=this.href;
+});
+
+</script>
+</html>

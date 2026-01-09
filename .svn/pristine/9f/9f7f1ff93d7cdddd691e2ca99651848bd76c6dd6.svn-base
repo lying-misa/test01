@@ -1,0 +1,394 @@
+<?php
+namespace Mobile\Controller;
+
+use Think\Controller;
+
+class PracticeController extends Controller
+{
+    public  $zm = array("-","A","B","C","D","E","F","G","H","I");
+    public  $sz = array("-","1","2","3","4","5","6","7","8","9");
+	public $num = 2;
+    /**
+     * 科目列表
+     * author: lying
+     * Date: 2018/10/18
+     * param id int session array
+     * return string
+     */
+    public function Index()
+    {
+		IsLogin();
+        $action = I('get.action');
+        if($action == 'RandPractice')
+            $this->RandPractice();
+        elseif($action == 'WrongQsPractice')
+            $this->WrongQsPractice();
+        elseif($action == 'AllWrongQsPractice')
+            $this->AllWrongQsPractice();
+		elseif($action == 'KnowledgePractice')
+            $this->KnowledgePractice();	
+        $this->assign('User',$_SESSION['User']);
+        $this->display();
+    }
+
+    /**
+     * 生成随机题目
+     * author: lying
+     * Date: 2018/10/17
+     * param id int
+     * return array
+     */
+    function RandPractice(){
+		IsLogin();
+        $SubjectID = I('SubjectID', '', 'trim');
+        $GradeID = I('GradeID', '', 'trim');
+        $KnowledgeID = I('KnowledgeID', '', 'trim');
+        $Subject = M('Subject');
+        $Questions = array();
+        $Answers = array();
+        if(!$SubjectID) $this->error('非法入口！');
+        else{
+            if(!$this->HaveSubjectGrade($SubjectID,$GradeID)) {
+                $returnStr['errormsg'] = '非法科目或者科目不存在!';
+                $this->error($returnStr['errormsg']);
+            }else{
+                $where = 'Type in (1,2,3) ';
+                if($SubjectID!=NULL && $SubjectID!=''){
+                    $where.=' and SubjectID='.$SubjectID;
+                }
+                if($GradeID!=NULL && $GradeID!=''){
+                    $where.=' and GradeID='.$GradeID;
+                }
+                if($KnowledgeID!=NULL && $KnowledgeID!=''){
+                    $where.=' and KnowledgeID='.$KnowledgeID;
+                }
+                    $field = 'ID,Title,Options,Type,Answer';
+                    $Questions = $this->setQuestion($where, $field, $this->num,'RandPractice');
+                    $this->assign('title','随机练习');
+                    $res =  $this->Obj2Arr($Questions);
+                    $this->assign('practice',$res);
+                    $this->assign('num',$this->num);
+                    $this->assign('SubjectID',$SubjectID);
+                    $this->assign('GradeID',$GradeID);
+                    $this->assign('zm',$this->zm);
+            }
+        }
+    }
+
+    /**
+     * 错题随机题目
+     * author: lying
+     * Date: 2018/10/17
+     * param id int
+     * return array
+     */
+    function WrongQsPractice(){
+		IsLogin();
+        $SubjectID = I('SubjectID', '', 'trim');
+        $GradeID = I('GradeID', '', 'trim');
+        $Subject = M('Subject');
+        $Questions = array();
+        $Answers = array();
+        if(!$SubjectID) $this->error('非法入口！');
+        else{
+            if(!$this->HaveSubjectGrade($SubjectID,$GradeID)) {
+                $returnStr['errormsg'] = '非法科目或者科目不存在!';
+                $this->error($returnStr['errormsg']);
+            }else{
+                $field = 'ID,Title,Options,Type,Answer';
+                //错题ID
+                $practice_history = M('practice_history');
+                $where_wrong['UserID'] = array('eq',1);
+                $where_wrong['SubjectID'] = array('eq',$SubjectID);
+                $where_wrong['GradeID'] = array('eq',$GradeID);
+                $res = $practice_history->where($where_wrong)->limit(20)->getField("QID",true);
+                $where['ID'] = array('in',implode(',',$res));
+                $Questions = $this->setQuestion($where, $field, $this->num,'WrongQsPractice');
+                $this->assign('title','错题练习');
+                $res =  $this->Obj2Arr($Questions);
+                $this->assign('practice',$res);
+                $this->assign('SubjectID',$SubjectID);
+                $this->assign('GradeID',$GradeID);
+                $this->assign('zm',$this->zm);
+            }
+        }
+    }
+
+    /**
+     * 所有的错题
+     * author: lying
+     * Date: 2018/10/17
+     * param id int
+     * return array
+     */
+    function AllWrongQsPractice(){
+		IsLogin();
+        $field = 'ID,Title,Options,Type,Answer';
+        //错题ID
+        $practice_history = M('practice_history');
+        $where_wrong['UserID'] = array('eq',$_SESSION['User']['UserID']);
+        $res = $practice_history->where($where_wrong)->limit(20)->getField("QID",true);
+        $where['ID'] = array('in',implode(',',$res));
+        $Questions = $this->setQuestion($where, $field, $this->num,'WrongQsPractice');
+        $this->assign('title','我的错题');
+        $res =  $this->Obj2Arr($Questions);
+        $this->assign('practice',$res);
+		$this->assign('zm',$this->zm);
+    }
+	
+   /**
+     * 知识点题目
+     * author: lying
+     * Date: 2018/10/17
+     * param id int
+     * return array
+     */
+    function KnowledgePractice(){
+		IsLogin();
+       // $SubjectID = I('SubjectID', '', 'trim');
+       // $GradeID = I('GradeID', '', 'trim');
+        $KnowledgeID = I('KnowledgeID', '', 'trim');
+        $Subject = M('Subject');
+        $Questions = array();
+        $Answers = array();
+       // if(!$SubjectID) $this->error('非法入口！');
+        //else{
+            //if(!$this->HaveSubjectGrade($SubjectID,$GradeID)) {
+            //    $returnStr['errormsg'] = '非法科目或者科目不存在!';
+             //   $this->error($returnStr['errormsg']);
+           // }else{
+                $where = 'Type in (1,2,3) ';
+                //if($SubjectID!=NULL && $SubjectID!=''){
+               //     $where.=' and SubjectID='.$SubjectID;
+               // }
+              //  if($GradeID!=NULL && $GradeID!=''){
+              //      $where.=' and GradeID='.$GradeID;
+              //  }
+                if($KnowledgeID!=NULL && $KnowledgeID!=''){
+                    $where.=' and KnowledgeID='.$KnowledgeID;
+                }
+                    $field = 'ID,Title,Options,Type,Answer';
+                    $Questions = $this->setQuestion($where, $field, $this->num,'KnowledgePractice');
+                    $this->assign('title','知识点练习');
+                    $res =  $this->Obj2Arr($Questions);
+                    $this->assign('practice',$res);
+                    $this->assign('num',$this->num);
+                   // $this->assign('SubjectID',$SubjectID);
+                   // $this->assign('GradeID',$GradeID);
+                    $this->assign('KnowledgeID',$KnowledgeID);
+                    $this->assign('zm',$this->zm);
+            }
+       // }
+    //}
+    /**
+     * 对象转化为二维数组
+     * author: lying
+     * Date: 2018/10/19
+     * param object
+     * return array
+     */
+    protected function Obj2Arr($object){
+        $count = count($object);
+        for($i=0;$i<$count;$i++){
+            $object[$i]['Options'] = json_decode($object[$i]['Options'],true);
+        }
+
+        return $object;
+    }
+
+    /**
+     * 出题目
+     * author: lying
+     * Date: 2018/11/17
+     * param where array
+     * return data array
+     */
+    protected function setQuestion($where,$field,$num,$type){
+		$arr = array();
+        //随机练习
+        if($type == 'RandPractice') {
+            //$where .= ' and status=1 and id >= (SELECT floor(RAND() * (SELECT MAX(id) FROM knowledge_qs where '.$where.'))) ';
+            $query = 'select '.$field.' from knowledge_qs where status=1 and '.$where.' order by rand() LIMIT '.$num;
+			$knowledge_qs = M('knowledge_qs');
+			$arr = $knowledge_qs->query($query);
+			//var_dump($dds);
+           // $arr = $knowledge_qs->where($where)
+           //     ->field($field)
+           //     ->limit($num)
+            //    ->select();
+            //echo $knowledge_qs->getLastSql();
+        }elseif($type == 'WrongQsPractice'){   //错题练习
+            $knowledge_qs = M('knowledge_qs');
+            $arr = $knowledge_qs->where($where)
+                ->field($field)
+                ->limit($num)
+                ->select();
+
+        }elseif($type == 'KnowledgePractice'){
+			$knowledge_qs = M('knowledge_qs');
+            $arr = $knowledge_qs->where($where)
+                ->field($field)
+                ->limit($num)
+                ->select();
+		}
+		$count = count($arr);
+		for($i=0;$i<$count;$i++){
+			$arr[$i]['rigntrate'] = getRightRate(array("QID"=>$arr[$i]['ID']),'practice_history');
+            $where['uid'] = $_SESSION['User']['UserID'];
+            $where['QID'] = $arr[$i]['ID'];
+            $arr[$i]['Iscollect'] = getRightRate($where);
+		}
+		return $arr;
+    }
+
+    /**
+     * 检查科目ID是否存在
+     * author: lying
+     * Date: 2018/11/15
+     * param id int
+     * return bool
+     */
+    protected function HaveSubjectGrade($ID,$GradeID)
+    {
+        $Subject = M('Subject');
+        if (!$ID && !$GradeID) return false;
+        else {
+            $res = $Subject->where('ID=' . $ID)->find();
+            $Grade = explode(',', $res['Grade']);
+            if ($key = in_array($GradeID, $Grade)) {
+                if (!$res['ID'] && $key) return false;
+                else return $res;
+            }
+        }
+    }
+
+    /**
+     * 提交试卷，得出分数
+     * author: lying
+     * Date: 2018/10/18
+     * param string ZKZH identity string
+     * return bool
+     */
+     
+	function  MakeScore()
+    {
+        $returnStr['status'] = 0;
+        $knowledge_qs = M('knowledge_qs');
+        $practice_history = M('practice_history');
+        $data['UserID'] = 1;
+        $data['SubjectID'] = I('SubjectID', '', 'trim') ? I('SubjectID', '', 'trim') : 0;
+        $data['GradeID'] = I('GradeID', '', 'trim') ? I('GradeID', '', 'trim') : 0;
+        $answers = I('answers', '', 'trim') ? I('answers', '', 'trim') : 0;
+        if(!$data['SubjectID'])  {$returnStr['errormsg'] = '参数丢失：考试科目ID为空';$this->error($returnStr['errormsg']);}
+        if(!$data['GradeID'])  {$returnStr['errormsg'] = '参数丢失：考试科目级别ID为空';$this->error($returnStr);}
+        if(!$answers)  {$returnStr['errormsg'] = '参数丢失：答案为空';$this->ajaxRetrun($returnStr);}
+		//var_dump($answers);
+        $answersarr = json_decode($answers);
+        //var_dump($answersarr);
+        $count = count($answersarr);
+        $rightNum = 0;
+        unset($_SESSION['User']['random_practice']);
+        for($i=0;$i<$count;$i++){
+			unset($data);;
+            //答案拆分 --匹配多选单选情况
+            $ID = array_pop($answersarr[$i]);
+            //将答案转换为字母
+            $count_op = count($answersarr[$i]);
+            for($j=0;$j<$count_op;$j++){
+                $op[$j] = $this->zm[$answersarr[$i][$j]];
+            }
+            $data['QID'] = $ID;
+            $where['ID'] = array('eq',$ID);
+            $data['Answer'] = implode(',',$op);
+            $data['TrueAnswer'] = $knowledge_qs->where($where)->getField('Answer');
+            if($data['TrueAnswer'] == $data['Answer']) {
+                $data['IsTrue'] = 1;
+                $rightNum = $rightNum +1;
+            }
+            else
+                $data['IsTrue'] = 0;
+            $data['CreateTime'] = time();
+            $practice_history->add($data);
+            $_SESSION['User']['random_practice'][$i]['QID'] = $data['QID'];
+            $_SESSION['User']['random_practice'][$i]['Answer'] = $answersarr[$i];
+            $_SESSION['User']['random_practice'][$i]['TrueAnswer'] = $data['TrueAnswer'];
+            $_SESSION['User']['random_practice'][$i]['IsTrue'] = $data['IsTrue'];
+        }
+        if($i == $count){
+            $returnStr['status'] = 1;
+            $returnStr['msg'] = '提交成功!';
+        }else{
+            $returnStr['msg'] = '提交失败!';
+        }
+        $this->ajaxReturn($returnStr);
+    }
+
+    /**
+     * 提交题目，答案列表
+     * author: lying
+     * Date: 2018/10/18
+     * param string action identity string
+     * return bool
+     */
+     function  AnswerSheet(){
+        $action = I('get.action')?I('get.action'):'';
+        if(!$action)  {$this->error('参数错误!');}
+        switch ($action){
+            case 'RandPractice':
+                $this->assign('list',$_SESSION['User']['random_practice']);
+                break;
+            default:
+                $this->error('参数错误!');
+                break;
+        }
+        $this->display();
+    }
+
+    /**
+     * 单个题目解析
+     * author: lying
+     * Date: 2018/11/18
+     * param string action identity string
+     * return bool
+     */
+     function  Analysis(){
+        $knowledge_qs = M('knowledge_qs');
+        $action = I('get.action')?I('get.action'):'';
+        $ID = I('get.ID')?I('get.ID'):'';
+        $key = I('get.key')?I('get.key'):'';
+        if(!$action)  {$this->error('参数错误!');}
+        if(!$ID)  {$this->error('ID错误!');}
+        if(!$key)  {$this->error('key错误!');}
+        switch ($action){
+            case 'RandPractice':
+                $questions = $knowledge_qs->where('ID='.$ID)->field('Title,Options')->find();
+                $questions_s = json_decode($questions['Options']);
+                $count_qs = count($questions_s);
+                for($i= 0;$i<$count_qs;$i++){
+                    $questions['option'][$i]['val'] =$questions_s[$i];
+                    $questions['option'][$i]['ischecked'] = in_array($i+1,$_SESSION['User']['random_practice'][$key]['Answer']);
+                }
+                $this->assign('info',$_SESSION['User']['random_practice'][$key]);
+                $this->assign('questions',$questions);
+                $this->assign('zm',$this->zm);
+                break;
+            default:
+                $this->error('参数错误!');
+                break;
+        }
+        $this->display();
+    }
+	
+    /*是否收藏*/
+    function Iscollect($where){
+        IsLogin();
+        $user_collect = M('user_collect');
+        $res = $user_collect->where($where)->getField('ID');
+        if($res){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+ 
+}

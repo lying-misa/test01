@@ -1,0 +1,102 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>在线题库系统</title>
+    <link href="/Public/mobile/css/mui.min.css" rel="stylesheet"/>
+    <link href="/Public/mobile/css/iconfont.css" rel="stylesheet"/>
+    <link href="/Public/mobile/css/common.css" rel="stylesheet"/>
+    <script src="/Public/mobile/js/mui.min.js"></script>
+
+
+</head>
+<body style="background-color: #fff;">
+<<<<<<< .mine
+	<div class="bg_category">
+		<div class="c_fix">
+		<div class="c_title">在线题库系统</div>
+		<div class="c_des color9">可根据自己的需求</br>选取合适的类别</div>
+		<div class="c_btn"> <button id="show_category" type="button" class="mui-btn mui-btn-blue" style="width: 100%; background: linear-gradient(to bottom right, #4981ed , #475ee9);border: none;padding: 0.2rem;">选择类别</button></div>
+		</div>
+	</div>
+||||||| .r292
+	<div class="bg_category">
+		<div class="c_fix">
+		<div class="c_title">在线题库系统</div>
+		<div class="c_des color9">可根据自己的需求</br>选取合适的类别</div>
+		<div class="c_btn"> <button id="show_category" type="button" class="mui-btn mui-btn-blue" style="width: 100%; background: linear-gradient(to bottom right, #4981ed , #475ee9);border: none;padding: 0.2rem;">选择类别</button></div>
+		</div>
+	</div>
+	
+=======
+<div class="bg_category">
+    <div class="c_fix">
+        <div class="c_title">在线题库系统</div>
+        <div class="c_des color9">可根据自己的需求</br>选取合适的类别</div>
+        <div class="c_btn"> <button id="show_category" type="button" class="mui-btn mui-btn-blue" style="width: 100%; background: linear-gradient(to bottom right, #4981ed , #475ee9);border: none;padding: 0.2rem;">选择类别</button></div>
+    </div>
+</div>
+
+>>>>>>> .r304
+<!--	弹出层-->
+<div id="popover_div"></div>
+<div id="popover" class="mui-popover">
+    <div class="dialog  dialog_bg">
+        <div class="colorF dialog_group_line" style="padding-top: .6rem;padding-bottom: 1.2rem;">
+            <div style="font-size: 0.5rem;line-height: 0.5rem;">选择类别</div>
+            <div style="line-height: 0.4rem;height: 0.4rem; font-size: 0.2rem;">根据需求选取合适的类别</div>
+        </div>
+        <div class="bg-white">
+            <?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><div class="color3 dialog_group_line">
+                    <div class="min_tit" data-pid="<?php echo ($vo["ID"]); ?>"><?php echo ($vo["Name"]); ?></div>
+                    <div class="tablist mui-table-view-radio">
+                        <?php if($vo['Grades']): if(is_array($vo["Grades"])): $i = 0; $__LIST__ = $vo["Grades"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vs): $mod = ($i % 2 );++$i;?><div class="tab" data-id="<?php echo ($vs); ?>"><?php echo ($vs); ?>级</div><?php endforeach; endif; else: echo "" ;endif; ?>
+                            <?php else: ?>
+                            <div class="tab" data-id="<?php echo ($vo["ID"]); ?>" style="width: 100%"><?php echo ($vo["Name"]); ?></div><?php endif; ?>
+                        <div class="mui-clearfix"></div>
+                    </div>
+                </div><?php endforeach; endif; else: echo "" ;endif; ?>
+            <div class="color3 dialog_group_line dialog_bottom" style="padding: 0;">
+                <input type="hidden" value="" id="qus_type">
+                <div class="J_random dialog_bl_btn color6">随便逛逛</div>
+                <div class="J_go_practice dialog_br_btn">进入练习</div>
+            </div>
+        </div>
+        <div class="mui-clearfix"></div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+<script type="text/javascript" charset="utf-8">
+    mui.init();
+    mui(".bg_category").on("tap",".mui-btn",function(){
+        mui("#popover").popover('toggle',document.getElementById("popover_div"));
+    });
+    mui(".tablist").on("tap",".tab",function(){
+        var pid=this.parentNode.previousElementSibling.dataset['pid'];
+        var id=this.dataset['id'];
+        document.getElementById("qus_type").value=pid+','+id;
+        var lastActiveElem = document.querySelector('.tablist .tab.active');
+        lastActiveElem&&lastActiveElem.classList.remove('active');
+        this.classList.add('active');
+    });
+    mui(".dialog_bottom").on("tap",".J_random",function(){
+        mui.openWindow({
+            url: '/mobile/Index/Practice.html',
+            id: 'practice'
+        })
+    });
+    mui(".dialog_bottom").on("tap",".J_go_practice",function(){
+        var data_type=document.getElementById("qus_type").value.split(",");
+        mui.openWindow({
+            url: '/mobile/Index/Practice/SubjectID/'+data_type[0]+'/GradeID/'+data_type[1]+'.html',
+            id: 'practice'
+        })
+    });
+
+</script>
+</html>

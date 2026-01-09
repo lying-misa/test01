@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>123456798</title>
+<link href="__PUBLIC__/mobile/css/mui.min.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/iconfont.css" rel="stylesheet"/>
+<link href="__PUBLIC__/mobile/css/common.css" rel="stylesheet"/>
+<script src="__PUBLIC__/mobile/js/mui.min.js"></script>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav bg-theme " style="z-index: 99;box-shadow: none;">
+  <button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left" style="color: #fff;"><span class="mui-icon mui-icon-left-nav"></span>返回</button>
+  <h1 class="mui-title colorF">答题卡</h1>
+  <a class="mui-icon mui-action-menu mui-icon-chat mui-pull-right colorF"></a> </header>
+<div class="mui-content mui-scroll-wrapper ">
+  <div class="mui-scroll">
+	  <div class="bg-white">
+	  	<div class="color3 font_big" style="padding: 0.2rem 0.4rem;">我的答案</div>
+    	<ul class="mui-table-view bg-white grid_list" >
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#"><div class="">1</div></a>
+		</li>
+			<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#"><div class="">2</div></a>
+		</li>
+			<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2 error">
+			<a href="#"><div class="">3</div></a>
+		</li>
+			<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#"><div class="">4</div></a>
+		</li><li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#"><div class="">5</div></a>
+		</li>
+			<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#"><div class="">6</div></a>
+		</li>
+			<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#"><div class="">7</div></a>
+		</li>
+    </ul>
+	  </div>
+	  
+	  
+	  <div class="color3 font_big bg-white" style="padding: 0.2rem 0.4rem;margin-top: 0.2rem;">正确答案</div>
+    <ul class="mui-table-view bg-white grid_list" >
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#">
+				<div class="">1</div>
+				<span>(A)</span>
+			</a>
+		</li>
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#">
+				<div class="">2</div>
+				<span>(A)</span>
+			</a>
+		</li>
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#">
+				<div class="">3</div>
+				<span>(A)</span>
+			</a>
+		</li>
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#">
+				<div class="">4</div>
+				<span>(A)</span>
+			</a>
+		</li>
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#">
+				<div class="">5</div>
+				<span>(A)</span>
+			</a>
+		</li>
+		<li class="mui-table-view-cell  mui-col-xs-2 mui-col-sm-2">
+			<a href="#">
+				<div class="">6</div>
+				<span>(A)</span>
+			</a>
+		</li>
+			
+			
+			
+			
+			
+    </ul>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/10/16 0016
+ * Time: 10:32
+ */
+
+/**
+ * 检查考试ID是否存在
+ * author: lying
+ * Date: 2018/10/15
+ * param id int
+ * return bool
+ */
+/*function HaveExam($ID){
+    $Exam = M('Exam');
+    if(!$ID) return false;
+    else{
+        $res = $Exam->where('id='.$ID)->find();
+        if(!$res) return false;
+        else return true;
+    }
+}*/
+
+/**
+ * 判断是否登录
+ * author: lying
+ * Date: 2018/10/18
+ * param session
+ * return bool
+ */
+function IsLogin(){
+	if(!isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID'] == NULL && $_SESSION['User']['UserID'] == '' &&
+	!isset($_SESSION['User']['Tel']) && $_SESSION['User']['Tel'] == NULL && $_SESSION['User']['Tel'] == ''){
+		//$this->error("请登录","Member/Login");
+        header("location:mobile/Member/Login");
+	}		
+}
+ /**
+  * 题目正确率
+  * author: lying
+  * Date: 2018/11/18
+  * param string where 
+  * return rate
+  */
+function  getRightRate($where,$table){
+	$practice_history = M($table);
+	$all = $practice_history->Field('ID')->where($where)->count();
+	if($all == 0){
+		$rate = 100;
+	}else{
+		$where['IsTrue']  = 1;
+		$right = $practice_history->Field('ID')->where($where)->count();
+		$rate = floor(($right/$all)*100);
+	}
+	return $rate;
+}
+ /**
+  * 题目个数
+  * author: lying
+  * Date: 2018/11/18
+  * param string where 
+  * return rate
+  */
+function getCountQS($where,$table){
+	$practice_history = M($table);
+	$count = $practice_history->distinct(true)->Field('ID')->where($where)->count();
+	return $count;
+}

@@ -1,0 +1,188 @@
+<?php
+namespace Admin\Controller;
+
+use Think\Controller;
+
+class OldExamController extends Controller
+{
+
+    /**
+     * 真题列表
+     * author: lying
+     * Date: 2018/10/18
+     * param where
+     * return array
+     */
+    function index()
+    {
+        $map = array();
+        $Name = I('Name','', 'trim');
+        if($Name!=NULL && $Name!=""){
+            $map['Name'] = array('like','%'.$Name.'%');
+        }
+        $p = $_GET['p']?$_GET['p']:1;
+        $Exam = M('OldExam');
+        $list = $Exam->where($map)
+            ->page($_GET['p'].',15')
+            ->field('ID,Name,Start,End,Status,CreateDate')
+            ->select();
+        //$this->assign('list',$list);
+        $count      = $Exam->where($map)->count();
+        $Page       = new \Think\Page($count,15);
+        foreach($map as $key=>$val) {
+            $Page->parameter[$key]   =   urlencode($val);
+        }
+        $show  = $Page->show();
+        $this->assign('list',$list);// 赋值数据集
+        $this->assign('page',$show);// 赋值分页输出
+        $this->assign('map',$map);// 赋值分页输出
+        $this->display(); // 输出模板
+    }
+    /**
+     * 保存考试
+     * author: lying
+     * Date: 2018/10/15
+     * param data array
+     * return json
+     */
+    public function SaveExam(){
+        $time = time();
+        $Exam=M("Exam");
+        $ID = I('ExamID','', 'trim');
+        $returnStr['status'] = 0;
+        $data['Name'] = I('Name','', 'trim');
+        $data['Description'] = I('Description','', 'trim');
+        $data['Status'] = I('Status','', 'trim')?I('Status','', 'trim'):0;
+        $data['Type'] = I('Type','', 'trim')?I('Type','', 'trim'):0;
+        $data['SubjectID'] = I('SubjectID','', 'trim')?I('SubjectID','', 'trim'):0;
+        $data['Option'] = I('Option','', 'trim')?I('Option','', 'trim'):60;
+        $data['Multiple'] = I('Multiple','', 'trim')?I('Multiple','', 'trim'):20;
+        $data['Judge'] = I('Judge','', 'trim')?I('Judge','', 'trim'):20;
+        $data['CreateDate'] = $time;
+        if(!$data['Name'])  {$returnStr['errormsg'] = '参数丢失：标题为空';$this->error($returnStr['errormsg']);}
+        if(!$data['SubjectID'])  {$returnStr['errormsg'] = '参数丢失：SubjectID为空！';$this->error($returnStr['errormsg']);}
+        if(!$data['Description'])  {$returnStr['errormsg'] = '参数丢失：考试描述为空！';$this->error($returnStr['errormsg']);}
+        if(!$data['Option'])  {$returnStr['errormsg'] = '参数丢失：选择题题目数为空！';$this->error($returnStr['errormsg']);}
+        if(!$data['Multiple'])  {$returnStr['errormsg'] = '参数丢失：多选题题目数为空！';$this->error($returnStr['errormsg']);}
+        if(!$data['Judge'])  {$returnStr['errormsg'] = '参数丢失：判断题题目数为空！';$this->error($returnStr['errormsg']);}
+        if($ID!=null && $ID >0){
+            if ($this->HaveExam($ID)) {
+                $result = $Exam->where(array('ID' => $ID))->save($data);
+                if (false !== $result || 0 !== $result) {
+                    //$returnStr['status'] = 1;
+                    $returnStr['errormsg'] = '修改成功';
+                    $this->success($returnStr['errormsg']);
+                } else {
+                    $returnStr['errormsg'] = '修改失败!';
+                    $this->error($returnStr['errormsg']);
+                }
+            }else{
+                $returnStr['errormsg'] = '非法真题或者真题不存在!';
+                //  $this->ajaxReturn($returnStr);
+                $this->error($returnStr['errormsg']);
+            }
+
+        }
+        else{
+            $result = $Exam->add($data);
+
+            if ($result){
+                $returnStr['status'] = 1;
+                $returnStr['errormsg'] = '提交成功';
+                //$this->ajaxReturn($returnStr);
+                $this->success($returnStr['errormsg']);
+            }else{
+                $returnStr['errormsg'] = '提交失败!';
+                // $this->ajaxReturn($returnStr);
+                $this->error($returnStr['errormsg']);
+            }
+        }
+    }
+    /**
+     * 检查考试ID是否存在
+     * author: lying
+     * Date: 2018/10/15
+     * param id int
+     * return bool
+     */
+    public function HaveExam($ID){
+        $Exam = M('OldExam');
+        if(!$ID) return false;
+        else{
+            $res = $Exam->where('ID='.$ID)->find();
+            if(!$res['ID']) return false;
+            else return $res;
+        }
+    }
+
+    /**
+     * 删除考试
+     * author: lying
+     * Date: 2018/10/15
+     * param id int
+     * return json
+     */
+    public function DelExam(){
+        $returnStr['Status'] = 0;
+        //$ID = I('ExamID','', 'trim');
+        $ID = implode(",",I('ID','','trim'));
+        $Exam = M('OldExam');
+        if(!$ID) {
+            //$this->error('非法考试或者考试不存在!');
+            $returnStr['errormsg'] = '非法真题或者真题不存在!';
+            $this->ajaxReturn($returnStr);
+        }
+        else{
+            //if(!$this->HaveExam($ID)) {
+            //  $this->error('非法考试或者考试不存在!');
+            // }else {
+            $res = $Exam->where('id in ('.$ID.')')->delete();
+            if ($res) {
+                //$this->success('删除成功!');
+                $returnStr['Status'] = 1;
+                $returnStr['errormsg'] = '删除成功!';
+                $this->ajaxReturn($returnStr);
+            }
+            else {
+                //$this->error('删除失败!');
+                $returnStr['errormsg'] = '删除失败!';
+                $this->ajaxReturn($returnStr);
+            }
+            //}
+        }
+    }
+
+    /**
+     * 修改考试
+     * author: lying
+     * Date: 2018/10/15
+     * param id int
+     * return json
+     */
+    function EditExam()
+    {
+        $ID = I('ExamID','', 'trim');
+        if(!$this->HaveExam($ID)) {
+            $this->assign("title","添加真题");
+            $this->display();
+        }
+        else {
+            $Exam = M('OldExam');
+            $res = $Exam->where('id='.$ID)->find();
+            //var_dump($res);
+            $this->assign('data',$res);
+            $this->assign("title","修改真题");
+            $this->display();
+        }
+    }
+    function IsLogined(){
+        if(isset($_SESSION['Name']) && $_SESSION['Name']!=NULL &&
+            isset($_SESSION['UserID']) && $_SESSION['UserID']!=NULL){
+            return true;
+        }else {
+            $this->error("请登录","Admin/Index/Login");
+        }
+    }
+
+}
+?>

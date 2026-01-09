@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/admin.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+</head>
+<body>
+
+
+  <div class="panel admin-panel">
+    <div class="panel-head"><strong class="icon-reorder"> 考题管理</strong> <a href="" style="float:right; display:none;">添加字段</a></div>
+    <div class="padding border-bottom">
+      <ul class="search" style="padding-left:10px;">
+        
+        <li>
+          <select name="Type" class="input" style="width:200px; line-height:17px;" onchange="changesearch()">
+            <option value="">请选择搜索类型</option>
+            <option value="1">单选题</option>
+            <option value="2">多选题</option>
+            <option value="3">判断题</option>
+          </select>
+        </li>
+        <li>
+          <input type="text" placeholder="请输入搜索关键字" name="keywords" class="input" style="width:250px; line-height:17px;display:inline-block" />
+          <a href="javascript:void(0)" class="button border-main icon-search" style="padding: 6px 10px" id="changesearch" > 搜索</a></li>
+      </ul>
+    </div>
+    <form method="post" action="/admin/Questions/DelQuestions" id="listform">
+    <table class="table table-hover text-center">
+      <tr>
+        <th width="100" style="text-align:left; padding-left:20px;">ID</th>
+        <th>题目名称</th>
+        <th>类型</th>
+        <th  width="15%">创建时间</th>
+        <th width="180">操作</th>
+      </tr>
+	<volist name="list" id="list" >
+      <tr>
+
+        <td style="text-align:left; padding-left:20px;">
+        	<input type="checkbox" name="ID[]" value="{$list.ID}" />{$list.ID}
+        </td>
+        <td>{$list.Title}</td>
+		<td><if condition="$list.Type eq 1">单选题<elseif condition="$list.Type eq 2"/>多选题<elseif condition="$list.Type eq 3"/>判断题</if></td>
+        <td>{$list.CreateDate|date='Y-m-d H:m',###}</td>
+        <td>
+        	<div class="button-group">
+          	<a class="button button-little border-main" href="/admin/Questions/EditQuestions/ID/{$list.ID}"><span class="icon-edit"></span>修改</a>
+          	<a class="button button-little border-red delsingle" href="javascript:void(0)" data-id="{$list.ID}" ><span class="icon-trash-o"></span>删除</a>
+          	 </div>
+        </td>
+      </tr>
+	</volist>
+      <tr>
+        <td style="text-align:left; padding:19px 0;padding-left:20px;"><input type="checkbox" id="checkall"/>全选 </td>
+        <td colspan="10" style="text-align:left;padding-left:20px;">
+        	<a href="javascript:void(0)" class="button border-red icon-trash-o" id="DelSelect"> 删除</a>
+        	<a class="button border-blue importstudent" href="javascript:void(0)"><span class="icon-download"></span>导入考题</a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="10"><div class="pagelist">{$page}</div></td>
+      </tr>
+    </table>
+	</form>
+  </div>
+
+<form id="importbox" name="FormData" action="/admin/Questions/UploadExcel"  enctype="multipart/form-data" method="post">
+	<div class="hidebox" id="hidebox">
+		<div class="dialog open dialog_hidebox">
+			<div class="dialog-head">
+				<span class="dialog-close close" id="hide_close"></span><strong>导入考题</strong>
+			</div>
+			<div class="dialog-body">
+				<div class="importline"><input type="file" name="excelData" ></div>
+				<div class="importline">
+					<select class="input w50" name="Type" data-validate="required:请选择分类">
+					<option value="">请选择导入题型</option>
+					<option value="1">单选题</option>
+					<option value="2">多选题</option>
+					<option value="3">判断题</option>
+				  </select>
+				</div>
+				
+				 <div class="importline">
+				 	<input type="submit" value="导入" class="button border-blue">
+				 </div>
+				
+			</div>
+
+		</div>
+	</div>
+</form>
+</body>
+<script src="__PUBLIC__/js/admin_common.js"></script>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/home.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+<script src="__PUBLIC__/js/jquery.cookie.js"></script>
+</head>
+
+<body>
+<div class="content">
+
+	<if condition="$data.status neq 1">
+		<div class="alert alert-red" style="font-size: 50px;">
+			<span class="close rotate-hover"></span><strong>{$data.msg}</strong>
+		</div>
+	<else/>
+		<div class="alert alert-green" style="font-size: 50px;">
+			<span class="close rotate-hover"></span><strong>您的考试成绩为：</strong><span class="text-dot">{$data.Score}</span> 分
+		</div>
+	</if>
+	
+	
+</div>
+
+
+</body>
+</html>

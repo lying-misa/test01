@@ -1,0 +1,98 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="renderer" content="webkit">
+<title></title>
+<link rel="stylesheet" href="/Public/css/pintuer.css">
+<link rel="stylesheet" href="/Public/css/admin.css">
+<script src="/Public/js/jquery.js"></script>
+<script src="/Public/js/pintuer.js"></script>
+</head>
+<body>
+
+  <div class="panel admin-panel">
+    <div class="panel-head"><strong class="icon-reorder"> 纠错管理</strong> <a href="" style="float:right; display:none;">添加字段</a></div>
+    <div class="padding border-bottom">
+      
+    </div>
+    <form method="post" action="#" id="listform">
+    <table class="table table-hover text-center">
+      <tr>
+        <th width="100" style="text-align:left; padding-left:20px;">ID</th>
+        <th>纠错题目 </th>
+        <th>纠错答案</th>
+        <th>正确答案 </th>
+        <th>理由</th>
+        <th width="320">操作</th>
+      </tr>
+        <?php if($list == null): ?>暂无纠错
+        <?php else: ?>
+            <?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><tr>
+                <td style="text-align:left; padding-left:20px;"><input type="checkbox" name="ID[]" value="<?php echo ($vo["ID"]); ?>" /><?php echo ($vo["ID"]); ?></td>
+                <td><?php echo ($vo["Title"]); ?></td>
+                <td><?php echo ($vo["Answer"]); ?></td>
+                <td><?php echo ($vo["True"]); ?></td>
+                <td><?php echo ($vo["Reason"]); ?></td>
+                <td>
+                    <div class="button-group">
+                        <a class="button button-little border-main" href="/admin/Correction/Save/ID/<?php echo ($vo["ID"]); ?>/QID/<?php echo ($vo["QID"]); ?>" onclick="return confirm('是否将纠错答案设置为正确答案？')"><span class="icon-edit"></span>设置纠错</a>
+                        <a class="button button-little border-red delsingle" href="javascript:void(0)" data-id="<?php echo ($list["ID"]); ?>" ><span class="icon-trash-o"></span>删除</a>
+                    </div>
+                </td>
+            </tr><?php endforeach; endif; else: echo "" ;endif; endif; ?>
+
+
+        <tr>
+        <td style="text-align:left; padding:19px 0;padding-left:20px;"><input type="checkbox" id="checkall"/>
+          全选 </td>
+        <td colspan="10" style="text-align:left;padding-left:20px;"><a href="javascript:void(0)" class="button border-red icon-trash-o" style="padding:5px 15px;" id="DelSelect" > 删除</a>  </td>
+      </tr>
+
+      <tr>
+        <td colspan="10"><div class="pagelist"><?php echo ($page); ?></div></td>
+      </tr>
+    </table>
+    </form>
+  </div>
+
+
+
+<form id="importbox" name="FormData" action="/Admin/Examinee/UploadExcel"  enctype="multipart/form-data" method="post">
+	<div class="hidebox" id="hidebox">
+		<div class="dialog open dialog_hidebox">
+			<div class="dialog-head">
+				<span class="dialog-close close" id="hide_close"></span><strong>导入考生</strong>
+			</div>
+			<div class="dialog-body">
+				<input type="file" name="excelData" >
+				<input type="hidden" value="1" name="ExamID">
+				<input type="submit" value="导入" class="button border-blue">
+			</div>
+
+		</div>
+	</div>
+</form>
+
+
+</body>
+<script src="/Public/js/admin_common.js"></script>
+<script>
+	$(".J_code").on("click",function(){
+		var id=$(this).data("id");
+		var url="/Admin/Exam/MakeIdentifier";
+		
+		$.ajax({
+			type: 'POST', 
+			data: {ExamID:id}, 
+			url: url,
+			success: function(result){
+				alert("随机码为："+result.Identifier);
+			},
+		});
+
+	});
+</script>
+</html>

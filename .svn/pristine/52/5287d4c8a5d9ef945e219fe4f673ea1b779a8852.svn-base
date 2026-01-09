@@ -1,0 +1,101 @@
+<?php
+namespace Mobile\Controller;
+
+use Think\Controller;
+
+class IndexController extends Controller
+{
+	protected function IsLogin(){
+		if(!isset($_SESSION['User']['UserID']) && $_SESSION['User']['UserID'] == NULL && $_SESSION['User']['UserID'] == '' &&
+		!isset($_SESSION['User']['Tel']) && $_SESSION['User']['Tel'] == NULL && $_SESSION['User']['Tel'] == ''){
+			$this->error("请登录","Member/Login");
+		}		
+	}
+    /**
+     * 科目列表
+     * author: lying
+     * Date: 2018/10/18
+     * param id int session array
+     * return string
+     */
+    public function Index()
+    {
+		$this->Islogin();
+        $map = array();
+        $Subject = M('Subject');
+        $map['ID'] = array('neq','0');
+        $map['Status'] = array('eq','1');
+        $list = $Subject->where($map)
+            ->field('ID,Name,Status,Grade,CreateDate')
+            ->select();
+        $count = count($list);
+        for($i=0;$i<$count;$i++){
+            if($list[$i]['Grade']!=null && $list[$i]['Grade']!='')
+                $list[$i]['Grades'] = explode(',',$list[$i]['Grade']);
+        }
+        $this->assign('list',$list);
+        $this->display('Index');
+    }
+
+    /**
+     * 练习表
+     * author: lying
+     * Date: 2018/11/18
+     * param id int session array
+     * return string
+     */
+    public function Practice()
+    {
+		Islogin();
+        $ID = I('get.SubjectID');
+        $GradeID = I('get.GradeID');
+        $map = array();
+        $map['ID'] = array('neq','0');
+        $Name = I('Name','', 'trim');
+        if($Name!=NULL && $Name!=""){
+            $map['Name'] = array('like','%'.$Name.'%');
+        }
+        if(!$ID)  {$returnStr['errormsg'] = '参数丢失：科目ID为空';$this->error($returnStr['errormsg']);}
+        if(!$GradeID)  {$returnStr['errormsg'] = '参数丢失：等级ID为空';$this->error($returnStr['errormsg']);}
+        if($ID!=NULL && $ID!=""){
+            $map['SubjectID'] = array('eq',$ID);
+        }
+        if($GradeID!=NULL && $GradeID!=""){
+            $map['GradeID'] = array('eq',$GradeID);
+        }
+        $p = $_GET['p']?$_GET['p']:1;
+        $knowledge = M('knowledge');
+        $list = $knowledge->where($map)
+            ->page($_GET['p'].',15')
+            ->field('ID,Name,SubjectID,Status,CreateDate')
+            ->select();
+        $count      = $knowledge->where($map)->count();
+        $Page       = new \Think\Page($count,15);
+        foreach($map as $key=>$val) {
+            $Page->parameter[$key]   =   urlencode($val);
+        }
+        $knowledgeqs = M('knowledge_qs');
+        $where_123['SubjectID'] = array('eq',$ID);
+        $where_123['GradeID']  = array('eq',$GradeID);
+        $where_123['Type']  = array('in','1,2,3');
+        $rec['CountRand'] = $knowledgeqs->field('ID')->where($where_123)->count();
+        $rec['CountDid'] = getCountQS(array('UserID'=>$_SESSION['User']['UserID']),'practice_history');
+        $rec['CountRight'] = getCountQS(array('UserID'=>$_SESSION['User']['UserID'],'IsTrue'=>1),'practice_history');
+        $rec['CountWrong'] = $rec['CountDid']-$rec['CountRight'];
+		//随机练习错误率
+		$rec['RandRate'] = getRightRate(array("UserID"=>$_SESSION['User']['UserID']),'practice_history');
+		//第二次错误练习正确数目
+		$rec['recondCountWrongRight'] = getCountQS(array('UserID'=>$_SESSION['User']['UserID'],'IsTrue'=>1),'practice_wrong_history');
+		$rec['recondCountWrong'] = getCountQS(array('UserID'=>$_SESSION['User']['UserID']),'practice_wrong_history');
+		$rec['recondRandRate'] = ($rec['recondCountWrongRight']/$rec['CountWrong'])*100;
+		$rec['recondCountRight'] = $rec['recondCountWrong'] - $rec['recondCountWrongRight'];
+        $this->assign('rec',$rec);
+        $show  = $Page->show();
+        $this->assign('list',$list);
+        $this->assign('SubjectID',$ID);
+        $this->assign('GradeID',$GradeID);
+        $this->assign('page',$show);
+        $this->display();
+    }
+	
+}

@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<link rel="stylesheet" href="__PUBLIC__/css/pintuer.css">
+<link rel="stylesheet" href="__PUBLIC__/css/home.css">
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script src="__PUBLIC__/js/pintuer.js"></script>
+<script src="__PUBLIC__/js/jquery.cookie.js"></script>
+</head>
+
+<body>
+
+<div class="bg-main text-large text-center bg-inverse padding-big">在线考试系统</div>
+<div class="content">
+  <div class="line">
+    <div class="x3">
+      <div class="lbox border border-main radius-big">
+        <div class="info">
+          <div class="infotit x5">姓名：</div>
+          <div class="infoval x7">张三</div>
+        </div>
+        <div class="info">
+          <div class="infotit x5">准考证号：</div>
+          <div class="infoval x7">465466546</div>
+        </div>
+        <div class="info">
+          <div class="infotit x5">报考课程：</div>
+          <div class="infoval x7">语文</div>
+        </div>
+         <div class="info">
+          <div class="infotit x5">考试时间：</div>
+          <div class="infoval x7">10：00-12：00</div>
+        </div>
+        <div class="info">
+          <div class="infotit">剩余时间：</div>
+          <div class="infoval time" id="remainTime">00:00:00</div>
+        </div>
+        
+        <div class="que_table">
+        	<volist name="data.Questions" id="titlist">
+				<div class="titnum">{$key+1}</div>
+        	</volist>
+			<div style="clear: both;"></div>
+        </div>
+        
+      </div>
+    </div>
+    <div class="x9">
+     	
+      <div class="rbox border border-main radius-big">
+      	<div class="x12">
+      		
+       		<input class="button border-main button-big x3 prev" type="button" value="上一题">
+       		<div class="x6">
+					
+       		</div>
+       		<input class="button border-main button-big x3 next" type="button" value="下一题">
+       </div>
+	   <div class="clear"></div>   
+      	<form method="post" action="/home/index/MakeScore" id="examform">
+       <volist name="data.Questions" id="queslist" key="fkey">
+       		<div class="que_line">
+					<if condition="$queslist.Type eq 1">
+							<div class="text-red">单选题</div>
+						<elseif condition="$queslist.Type eq 2"/>
+							<div class="text-red">多选题</div>
+						<else/>
+							<div class="text-red">判断题</div>
+						</if>
+			  <div class="que_tit">({$key+1})&nbsp;{$queslist.Title}</div>
+
+
+
+			  <if condition="$queslist.TW eq 2">
+				<div class="que_val"><img src="{$queslist.TWPic}" alt="" height="180"></div>
+			  </if>
+			  
+
+			  
+			  <div class="que_val">
+				<ul class="list-unstyle height">
+			  		<volist name="queslist.Options" id="answer">
+			  		
+			  			<if condition="$queslist.Type eq 1">
+			  				<li><input type="radio" name="Reply[{$fkey-1}]" value="{$key+1}">{$answer}</li>
+			  			<elseif condition="$queslist.Type eq 2"/>
+			  				<li><input type="checkbox" name="Reply[{$fkey-1}][]" value="{$key+1}">{$answer}</li>
+			  			<else/>
+			  				<li><input type="radio" name="Reply[{$fkey-1}]" value="{$key+1}">{$answer}</li>
+			  			</if>
+			  			
+			  		</volist>
+				</ul>
+			  </div>
+			</div>
+       </volist>
+       
+       <div class="x12">
+      		<div class="x4"></div>
+       		<input type="hidden" name="ExamID" value="{$data.ExamID}">
+       		<input class="button border-main button-large x4" type="button" value="提交试卷" id="J_submit">
+       	</div>
+       <div class="clear"></div>
+       </form>
+      </div>
+      
+      
+    </div>
+  </div>
+</div>
+</body>
+<script>
+	var expire= new Date();
+	var expiresDate= new Date();
+	expiresDate.setTime(expire.getTime()+(120* 60*1000));
+	//?替换成分钟数如果为60分钟则为 60 * 60 *1000
+	var cookie=JSON.parse($.cookie('__cookie__'));//读取cookie
+	var num=$(".titnum").length;
+	if(!cookie){
+		save_cookie(0,"",7200);
+		$(".que_line").eq(0).addClass("active");
+		$(".titnum").eq(0).addClass("selected");
+	}else{
+		$(".que_line").eq(cookie.num).addClass("active");
+		$(".titnum").eq(cookie.num).addClass("selected");
+		
+		var hfselect=cookie.answer;
+		for(var i=0;i<num;i++){
+			if(hfselect[i]){
+				var ansArr=hfselect[i].split(',');
+				var anslength=$(".que_line").eq(i).find('li').length;
+				for(var j=0;j<anslength;j++){
+					if(ansArr[j]){
+						$(".que_line").eq(i).find('input').eq(ansArr[j]-1).prop('checked', true);
+						
+					}
+					
+				}
+			}
+		}
+	}
+	var Ansdata=new Object();
+	//保存cookie
+	function save_cookie(num,answer,time){
+		var cookieArr=new Object();
+		cookieArr['num']=num;
+		cookieArr['answer']=answer;
+		cookieArr['time']=time;
+		$.cookie("__cookie__",JSON.stringify(cookieArr), {
+  			path : '*',//cookie的作用域
+  			expires : expiresDate
+ 		});
+	}
+
+	
+	$(".prev").click(function(){
+		var indexnum=$(".que_line").index($(".active"));
+		if(indexnum>0){
+			$(".que_line").eq(indexnum).removeClass("active");
+			$(".que_line").eq(indexnum-1).addClass("active");
+			$(".titnum").eq(indexnum-1).addClass("selected").siblings().removeClass("selected");
+			var cookie=JSON.parse($.cookie('__cookie__')); 
+			var answer=getanswer(indexnum);
+			save_cookie(indexnum-1,answer);
+		}else{
+			alert("已经是第一题了！");
+		}
+		
+	});
+	
+	$(".titnum").on("click",function(){
+		$(".que_line").eq($(".titnum").index(this)).addClass("active").siblings().removeClass("active");
+		$(this).addClass("selected").siblings().removeClass("selected");
+	})
+	
+	$(".next").click(function(){
+		var indexnum=$(".que_line").index($(".active"));
+		if(indexnum<(num-1)){
+			$(".que_line").eq(indexnum).removeClass("active");
+			$(".que_line").eq(indexnum+1).addClass("active");
+			$(".titnum").eq(indexnum+1).addClass("selected").siblings().removeClass("selected");
+			var cookie=JSON.parse($.cookie('__cookie__'));
+			var answer=getanswer(indexnum);
+			save_cookie(indexnum+1,answer);
+		}else{
+			alert("已经是最后一题了！");
+		}
+		
+		//console.log(JSON.parse($.cookie('__cookie__')));
+	});
+	
+	function getanswer(n){
+		var form=$(".que_line").eq(n).find("input:checked");
+		var m=[];
+		var i=0;
+		form.each(function () {
+			m[i]=this.value;
+			i++;
+            Ansdata[n]=m.join(",");
+        })
+		
+		return Ansdata;
+	}
+	
+	$("#J_submit").click(function(){
+
+		var t = confirm("您确认要提交试卷吗？");
+		if (t === true) {
+			$("#examform").submit();
+			$.cookie("__cookie__",'');
+			return true;
+		}else{
+			return false;
+			
+		}
+		
+		
+	})
+</script>
+
+
+<script type="text/javascript">
+	$(function(){         
+		var now=new Date();
+		//var end=now+3600*2*1000;//结束的时间：年，月，日，分，秒（月的索引是0~11） 
+		/*两个时间相减,得到的是毫秒ms,变成秒*/ 
+		var cookie=JSON.parse($.cookie('__cookie__')); 
+		
+		if(cookie.time){
+			var result=cookie.time;
+		}else{
+			var result=3600*2;//Math.floor(end-now)/1000; 
+		}
+        
+        var interval=setInterval(sub,1000); //定时器 调度对象
+        /*封装减1秒的函数*/
+        function sub(){
+            if (result>1) {
+               result = result - 1; 
+				var cookie=JSON.parse($.cookie('__cookie__')); 
+
+				save_cookie(cookie.num,cookie.answer,result);
+               var second = Math.floor(result % 60);     // 计算秒 ，取余  
+               var minite = Math.floor((result / 60) % 60); //计算分 ，换算有多少分，取余，余出多少秒
+               var hour = Math.floor((result / 3600) % 24); //计算小时，换算有多少小时，取余，24小时制除以24，余出多少小时
+                var day = Math.floor(result / (3600*24));  //计算天 ，换算有多少天
+             
+                $("#remainTime").html(hour + ":" + minite + ":" + second);
+             } else{
+				 $("#examform").submit();
+                 window.clearInterval(interval);//这里可以添加倒计时结束后需要执行的事件 
+            }
+         };
+    });
+</script>
+</html>

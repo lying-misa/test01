@@ -1,0 +1,24 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/10/16 0016
+ * Time: 10:32
+ */
+
+/**
+ * 检查考试ID是否存在
+ * author: lying
+ * Date: 2018/10/15
+ * param id int
+ * return bool
+ */
+/*function HaveExam($ID){
+    $Exam = M('Exam');
+    if(!$ID) return false;
+    else{
+        $res = $Exam->where('id='.$ID)->find();
+        if(!$res) return false;
+        else return true;
+    }
+}*/
